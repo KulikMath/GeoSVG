@@ -678,12 +678,20 @@
 
         // Titik (Point)
         buatTitik(x, y, options = {}) {
-            if (Array.isArray(x)) {
+            // Titik boleh berbentuk [x, y] atau {x, y}. Kalau begitu, argumen ke-2 adalah options.
+            if (x !== null && typeof x === 'object') {
+                const p = this._pt(x);
+                if (!p) return this._gagal("buatTitik: titik harus [x, y] atau {x, y} berisi angka");
                 options = y || {};
-                y = x[1];
-                x = x[0];
+                x = p.x;
+                y = p.y;
             }
             if (!this._semuaAngka(x, y)) return this._gagal("buatTitik: x dan y harus angka");
+
+            // Pastikan benar-benar angka (bukan teks seperti "10"), supaya x + size tidak menjadi "104"
+            x = Number(x);
+            y = Number(y);
+
             options = this._normalizeOptions(options, GEOSVG_ALIAS.titik);
 
             const marker = options.marker || 'full-circle';
