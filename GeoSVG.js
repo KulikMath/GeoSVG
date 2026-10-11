@@ -741,7 +741,10 @@
                 this._tegakkanTeks(text);
                 group.appendChild(text);
             }
-
+    // Transparansi: berlaku untuk seluruh titik (bentuk dan labelnya)
+    if (this._ada(options.opacity)) group.setAttribute('opacity', options.opacity);
+    if (this._ada(options.fillOpacity)) group.setAttribute('fill-opacity', options.fillOpacity);
+    if (this._ada(options.strokeOpacity)) group.setAttribute('stroke-opacity', options.strokeOpacity);
             this._tambah(group, 'shapes');
             return group;
         }
@@ -1447,6 +1450,50 @@
             return this._bentukBusur('buatTembereng', 'tembereng', cx, cy, r, startAngle, endAngle, options);
         }
 
+        // Setengah lingkaran dengan diameter = garis antara dua titik ujung.
+// Dua cara memanggil:
+//   buatSetengahLingkaran(x1, y1, x2, y2, options)
+//   buatSetengahLingkaran(p1, p2, options)     <- p1, p2 berbentuk [x, y] atau {x, y}
+// options:
+//   tutup : true (bawaan) = garis diameter ikut digambar; false = hanya busur
+//   sisi  : 'kiri' (bawaan) atau 'kanan' = sisi tempat busur menggembung,
+//           dilihat dari arah p1 menuju p2 di layar
+// Opsi gaya lain (stroke, fill, strokeWidth, opacity, dashed, dst) berlaku seperti bentuk lain.
+buatSetengahLingkaran(a, b, c, d, e) {
+    const arg = this._duaTitik(a, b, c, d, e);
+    if (!arg) return this._gagal("buatSetengahLingkaran: titik harus [x, y] atau {x, y} berisi angka");
+
+    let { x1, y1, x2, y2, options } = arg;
+    if (!this._semuaAngka(x1, y1, x2, y2)) {
+        return this._gagal("buatSetengahLingkaran: x1, y1, x2, y2 harus angka");
+    }
+    x1 = Number(x1); y1 = Number(y1); x2 = Number(x2); y2 = Number(y2);
+
+    const diameter = Math.hypot(x2 - x1, y2 - y1);
+    if (diameter === 0) {
+        return this._gagal("buatSetengahLingkaran: kedua titik ujung sama, diameter tidak boleh 0");
+    }
+
+    const sisi = this._ada(options.sisi) ? options.sisi : 'kiri';
+    if (sisi !== 'kiri' && sisi !== 'kanan') {
+        return this._gagal(`buatSetengahLingkaran: sisi '${sisi}' tidak dikenal. Pilihan: kiri, kanan`);
+    }
+
+    // Di layar biasa, busur searah jarum jam (sweep 1) menggembung ke kiri arah p1 -> p2.
+    // Di mode yUp seluruh lapisan dibalik, jadi nilainya ikut dibalik.
+    const sweepKiri = this._yUp ? 0 : 1;
+    const sweep = (sisi === 'kiri') ? sweepKiri : 1 - sweepKiri;
+
+    const r = diameter / 2;
+    const tutup = options.tutup !== false;     // hanya false yang membuat busur terbuka
+    const dPath = `M ${x1} ${y1} A ${r} ${r} 0 0 ${sweep} ${x2} ${y2}` + (tutup ? ' Z' : '');
+
+    const path = this._el('path', { d: dPath, fill: 'none' });
+    this._applyOptions(path, options);
+    this._tambah(path, 'shapes');
+    return path;
+}
+        
         // Besar sudut dalam derajat (0 sampai 180; atau 180 sampai 360 dengan refleks: true).
         // options.desimal: jumlah angka di belakang koma (bawaan 2)
         hitungSudut(p1, vertex, p3, options = {}) {
@@ -1628,6 +1675,7 @@
             div.style.display = "inline-block";
             div.style.whiteSpace = "nowrap";      // rumus panjang tidak terlipat
             div.style.color = options.color || "black";
+                if (this._ada(options.opacity)) div.style.opacity = options.opacity;
             if (options.fontSize) div.style.fontSize = options.fontSize;
 
             const isDisplay = options.displayMode || false;
