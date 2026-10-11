@@ -786,9 +786,16 @@
             return { x1: p1.x, y1: p1.y, x2: p2.x, y2: p2.y, options: c || {} };
         }
 
-        // Segmen (Line Segment)
-        buatSegmen(x1, y1, x2, y2, options = {}) {
+        // Segmen garis. Dua cara memanggil:
+        //   buatSegmen(x1, y1, x2, y2, options)
+        //   buatSegmen(p1, p2, options)      <- p1, p2 berbentuk [x, y] atau {x, y}
+        buatSegmen(a, b, c, d, e) {
+            const arg = this._duaTitik(a, b, c, d, e);
+            if (!arg) return this._gagal("buatSegmen: titik harus [x, y] atau {x, y} berisi angka");
+
+            const { x1, y1, x2, y2, options } = arg;
             if (!this._semuaAngka(x1, y1, x2, y2)) return this._gagal("buatSegmen: x1, y1, x2, y2 harus angka");
+
             const line = this._el('line', { x1, y1, x2, y2 });
             this._applyOptions(line, options);
             this._tambah(line, 'shapes');
