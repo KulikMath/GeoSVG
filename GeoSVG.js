@@ -757,7 +757,7 @@
 
         // Garis (tak hingga): dipotong tepat di tepi area gambar
         // options.clipPad = jarak tambahan di luar area (bawaan 5)
-        buatGaris(x1, y1, x2, y2, options = {}) {
+        buatGaris(a, b, c, d, e) {
             const arg = this._duaTitik(a, b, c, d, e);
             if (!arg) return this._gagal("buatGaris: titik harus [x, y] atau {x, y} berisi angka");
 
