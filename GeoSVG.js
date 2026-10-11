@@ -1712,10 +1712,16 @@
             return pattern;
         }
 
-        // Garis Berpanah / Vektor
-        buatVektor(x1, y1, x2, y2, options = {}) {
+        // Panah. Dua cara memanggil: buatVektor(x1, y1, x2, y2, options) atau buatVektor(p1, p2, options)
+        buatVektor(a, b, c, d, e) {
+            const arg = this._duaTitik(a, b, c, d, e);
+            if (!arg) return this._gagal("buatVektor: titik harus [x, y] atau {x, y} berisi angka");
+
+            const { x1, y1, x2, y2, options } = arg;
             const line = this.buatSegmen(x1, y1, x2, y2, options);
-            const color = options.stroke || this.svg.getAttribute("stroke") || 'black';
+            if (!line) return null;
+
+            const color = options.stroke || 'black';
             line.setAttribute("marker-end", `url(#${this._getMarker(color)})`);
             return line;
         }
