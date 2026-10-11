@@ -550,23 +550,26 @@
             return props;
         }
 
+        // Menentukan di mana label titik diletakkan.
+        // labelPosition = sisi titik tempat label berada ('top-right' = label di kanan-atas titik).
+        // dx/dy = pergeseran jangkar label dari titik; alignPos = cara teks disusun terhadap jangkar.
         _getLabelAlignment(labelPosition, padding) {
             const pos = this._normalisasiPosisi(labelPosition, 'top-right');
 
             // [arah x, arah y, posisi teks]. Arah dikali padding: -1 = ke kiri/atas, 1 = ke kanan/bawah
             const tabel = {
-                'top-left': [-1, -1, 'bottom-right'],
-                'top-center': [0, -1, 'bottom-center'],
-                'top-right': [1, -1, 'bottom-left'],
-                'middle-left': [-1, 0, 'middle-right'],
+                'top-left': [-1, -1, 'top-left'],
+                'top-center': [0, -1, 'top-center'],
+                'top-right': [1, -1, 'top-right'],
+                'middle-left': [-1, 0, 'middle-left'],
                 'middle-center': [0, 0, 'middle-center'],
-                'middle-right': [1, 0, 'middle-left'],
-                'bottom-left': [-1, 1, 'top-right'],
-                'bottom-center': [0, 1, 'top-center'],
-                'bottom-right': [1, 1, 'top-left']
+                'middle-right': [1, 0, 'middle-right'],
+                'bottom-left': [-1, 1, 'bottom-left'],
+                'bottom-center': [0, 1, 'bottom-center'],
+                'bottom-right': [1, 1, 'bottom-right']
             };
 
-            const [kx, ky, alignPos] = tabel[pos] || [0, 0, 'bottom-left'];
+            const [kx, ky, alignPos] = tabel[pos] || [0, 0, 'top-right'];
             return { dx: kx * padding, dy: ky * padding, alignPos };
         }
 
