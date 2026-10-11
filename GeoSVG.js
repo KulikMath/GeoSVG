@@ -773,6 +773,19 @@
             return line;
         }
 
+        // Mengenali dua bentuk pemanggilan:
+        //   bentuk lama : (x1, y1, x2, y2, options)
+        //   bentuk baru : (p1, p2, options), titik boleh [x, y] atau {x, y}
+        // Mengembalikan { x1, y1, x2, y2, options }, atau null jika titiknya tidak valid.
+        _duaTitik(a, b, c, d, e) {
+            if (typeof a === 'number' || typeof a === 'string') {
+                return { x1: a, y1: b, x2: c, y2: d, options: e || {} };
+            }
+            const p1 = this._pt(a), p2 = this._pt(b);
+            if (!p1 || !p2) return null;
+            return { x1: p1.x, y1: p1.y, x2: p2.x, y2: p2.y, options: c || {} };
+        }
+
         // Segmen (Line Segment)
         buatSegmen(x1, y1, x2, y2, options = {}) {
             if (!this._semuaAngka(x1, y1, x2, y2)) return this._gagal("buatSegmen: x1, y1, x2, y2 harus angka");
