@@ -593,8 +593,8 @@
                 x: vx + jarak * Math.cos(garisBagi),
                 y: vy + jarak * Math.sin(garisBagi),
                 fill: opsi.labelColor || 'black',
-    'font-weight': opsi.bold ? 'bold' : (opsi.fontWeight || 'normal'), // <-- Tambahkan baris ini
-    stroke: 'none'
+                'font-weight': opsi.bold ? 'bold' : (opsi.fontWeight || 'normal'),
+                stroke: 'none'
             });
             text.textContent = opsi.label;
             if (opsi.fontSize) text.setAttribute("font-size", opsi.fontSize);
@@ -737,18 +737,19 @@
                     fill: options.labelColor || color,
                     'font-size': options.fontSize || "12px",
                     'font-family': options.fontFamily || "sans-serif",
-                    'font-weight': options.bold ? 'bold' : (options.fontWeight || 'normal'), // <-- Tambahkan baris ini
-    stroke: 'none'
+                    'font-weight': options.bold ? 'bold' : (options.fontWeight || 'normal'),
+                    stroke: 'none'
                 });
                 this._applyTextAlignment(text, labelAlign.alignPos);
                 text.textContent = options.label;
                 this._tegakkanTeks(text);
                 group.appendChild(text);
             }
-    // Transparansi: berlaku untuk seluruh titik (bentuk dan labelnya)
-    if (this._ada(options.opacity)) group.setAttribute('opacity', options.opacity);
-    if (this._ada(options.fillOpacity)) group.setAttribute('fill-opacity', options.fillOpacity);
-    if (this._ada(options.strokeOpacity)) group.setAttribute('stroke-opacity', options.strokeOpacity);
+
+            // Transparansi: berlaku untuk seluruh titik (bentuk dan labelnya)
+            if (this._ada(options.opacity)) group.setAttribute('opacity', options.opacity);
+            if (this._ada(options.fillOpacity)) group.setAttribute('fill-opacity', options.fillOpacity);
+            if (this._ada(options.strokeOpacity)) group.setAttribute('stroke-opacity', options.strokeOpacity);
             this._tambah(group, 'shapes');
             return group;
         }
@@ -1241,27 +1242,27 @@
         }
 
         // Mengenali dua bentuk pemanggilan segitiga:
-//   bentuk lama : (x1, y1, x2, y2, x3, y3, options)
-//   bentuk baru : (p1, p2, p3, options), titik boleh [x, y] atau {x, y}
-// Mengembalikan { titik: [t1, t2, t3], options }.
-_tigaTitik(a, b, c, d, e, f, g) {
-    if (typeof a === 'number' || typeof a === 'string') {
-        return { titik: [[a, b], [c, d], [e, f]], options: g || {} };
-    }
-    return { titik: [a, b, c], options: d || {} };
-}
+        //   bentuk lama : (x1, y1, x2, y2, x3, y3, options)
+        //   bentuk baru : (p1, p2, p3, options), titik boleh [x, y] atau {x, y}
+        // Mengembalikan { titik: [t1, t2, t3], options }.
+        _tigaTitik(a, b, c, d, e, f, g) {
+            if (typeof a === 'number' || typeof a === 'string') {
+                return { titik: [[a, b], [c, d], [e, f]], options: g || {} };
+            }
+            return { titik: [a, b, c], options: d || {} };
+        }
         // Segitiga. Dua cara memanggil:
-//   buatSegitiga(x1, y1, x2, y2, x3, y3, options)
-//   buatSegitiga(p1, p2, p3, options)      <- tiap titik berbentuk [x, y] atau {x, y}
-buatSegitiga(a, b, c, d, e, f, g) {
-    const { titik, options } = this._tigaTitik(a, b, c, d, e, f, g);
+        //   buatSegitiga(x1, y1, x2, y2, x3, y3, options)
+        //   buatSegitiga(p1, p2, p3, options)      <- tiap titik berbentuk [x, y] atau {x, y}
+        buatSegitiga(a, b, c, d, e, f, g) {
+            const { titik, options } = this._tigaTitik(a, b, c, d, e, f, g);
 
-    const p = titik.map(t => this._pt(t));
-    if (p.some(t => !t)) {
-        return this._gagal("buatSegitiga: titik harus [x, y] atau {x, y} berisi angka");
-    }
-    return this.buatPoligon(p.map(t => [t.x, t.y]), options);
-}
+            const p = titik.map(t => this._pt(t));
+            if (p.some(t => !t)) {
+                return this._gagal("buatSegitiga: titik harus [x, y] atau {x, y} berisi angka");
+            }
+            return this.buatPoligon(p.map(t => [t.x, t.y]), options);
+        }
 
         // ===== LINGKARAN LUAR DAN DALAM SEGITIGA =====
 
@@ -1321,54 +1322,100 @@ buatSegitiga(a, b, c, d, e, f, g) {
             return this._lingkaranSegitiga(this.hitungLingkaranDalam(p1, p2, p3), options);
         }
 
-        // Persegi Panjang (Rectangle)
-        buatPersegiPanjang(x, y, width, height, options = {}) {
+        // Persegi panjang. Dua cara memanggil:
+        //   buatPersegiPanjang(x, y, width, height, options)
+        //   buatPersegiPanjang(titik, width, height, options)      <- titik berbentuk [x, y] atau {x, y}
+        // (x, y) adalah sudut kiri atas di layar biasa.
+        buatPersegiPanjang(...args) {
+            const arg = this._bacaPusat(args, 2);
+            if (!arg) return this._gagal("buatPersegiPanjang: titik harus [x, y] atau {x, y} berisi angka");
+
+            let x = arg.cx, y = arg.cy;
+            let [width, height] = arg.nilai;
+            const options = arg.options;
+
             if (!this._semuaAngka(x, y, width, height) || Number(width) < 0 || Number(height) < 0) {
-                return this._gagal("buatPersegiPanjang: x, y, width, height harus angka, dan width/height tidak boleh negatif");
+                return this._gagal("buatPersegiPanjang: titik, width, height harus angka, dan width/height tidak boleh negatif");
             }
+            x = Number(x); y = Number(y); width = Number(width); height = Number(height);
+
             const rect = this._el('rect', { x, y, width, height });
             this._applyOptions(rect, options);
             this._tambah(rect, 'shapes');
             return rect;
         }
 
-        // Persegi (Square)
-        buatPersegi(x, y, side, options = {}) {
-            return this.buatPersegiPanjang(x, y, side, side, options);
+        // Persegi. Dua cara memanggil:
+        //   buatPersegi(x, y, sisi, options)
+        //   buatPersegi(titik, sisi, options)      <- titik berbentuk [x, y] atau {x, y}
+        buatPersegi(...args) {
+            const arg = this._bacaPusat(args, 1);
+            if (!arg) return this._gagal("buatPersegi: titik harus [x, y] atau {x, y} berisi angka");
+
+            const [sisi] = arg.nilai;
+            if (!this._semuaAngka(arg.cx, arg.cy, sisi) || Number(sisi) < 0) {
+                return this._gagal("buatPersegi: titik dan sisi harus angka, dan sisi tidak boleh negatif");
+            }
+            return this.buatPersegiPanjang(arg.cx, arg.cy, sisi, sisi, arg.options);
         }
 
         // Lingkaran. Dua cara memanggil:
-//   buatLingkaran(cx, cy, r, options)
-//   buatLingkaran(pusat, r, options)      <- pusat berbentuk [x, y] atau {x, y}
-buatLingkaran(a, b, c, d) {
-    let cx, cy, r, options;
+        //   buatLingkaran(cx, cy, r, options)
+        //   buatLingkaran(pusat, r, options)      <- pusat berbentuk [x, y] atau {x, y}
+        buatLingkaran(a, b, c, d) {
+            let cx, cy, r, options;
 
-    if (typeof a === 'number' || typeof a === 'string') {
-        // Bentuk lama
-        cx = a; cy = b; r = c; options = d || {};
-    } else {
-        // Bentuk baru
-        const p = this._pt(a);
-        if (!p) return this._gagal("buatLingkaran: pusat harus [x, y] atau {x, y} berisi angka");
-        cx = p.x; cy = p.y; r = b; options = c || {};
-    }
-
-    if (!this._semuaAngka(cx, cy, r) || Number(r) < 0) {
-        return this._gagal("buatLingkaran: pusat dan r harus angka, dan r tidak boleh negatif");
-    }
-    cx = Number(cx); cy = Number(cy); r = Number(r);
-
-    const circle = this._el('circle', { cx, cy, r });
-    this._applyOptions(circle, options);
-    this._tambah(circle, 'shapes');
-    return circle;
-}
-
-        // Elips (Ellipse)
-        buatElips(cx, cy, rx, ry, options = {}) {
-            if (!this._semuaAngka(cx, cy, rx, ry) || Number(rx) < 0 || Number(ry) < 0) {
-                return this._gagal("buatElips: cx, cy, rx, ry harus angka, dan rx/ry tidak boleh negatif");
+            if (typeof a === 'number' || typeof a === 'string') {
+                // Bentuk lama
+                cx = a; cy = b; r = c; options = d || {};
+            } else {
+                // Bentuk baru
+                const p = this._pt(a);
+                if (!p) return this._gagal("buatLingkaran: pusat harus [x, y] atau {x, y} berisi angka");
+                cx = p.x; cy = p.y; r = b; options = c || {};
             }
+
+            if (!this._semuaAngka(cx, cy, r) || Number(r) < 0) {
+                return this._gagal("buatLingkaran: pusat dan r harus angka, dan r tidak boleh negatif");
+            }
+            cx = Number(cx); cy = Number(cy); r = Number(r);
+
+            const circle = this._el('circle', { cx, cy, r });
+            this._applyOptions(circle, options);
+            this._tambah(circle, 'shapes');
+            return circle;
+        }
+
+        // Membaca pusat + nilai-nilai lain + options. Dua bentuk:
+        //   lama : (cx, cy, v1, v2, ..., options)
+        //   baru : (pusat, v1, v2, ..., options)     pusat = [x, y] atau {x, y}
+        // jumlah = banyaknya nilai setelah pusat (mis. 3 untuk busur: r, startAngle, endAngle).
+        // Mengembalikan { cx, cy, nilai: [...], options }, atau null jika pusatnya tidak valid.
+        _bacaPusat(args, jumlah) {
+            const a = args[0];
+            if (typeof a === 'number' || typeof a === 'string') {
+                return { cx: a, cy: args[1], nilai: args.slice(2, 2 + jumlah), options: args[2 + jumlah] || {} };
+            }
+            const p = this._pt(a);
+            if (!p) return null;
+            return { cx: p.x, cy: p.y, nilai: args.slice(1, 1 + jumlah), options: args[1 + jumlah] || {} };
+        }
+        // Elips. Dua cara memanggil:
+        //   buatElips(cx, cy, rx, ry, options)
+        //   buatElips(pusat, rx, ry, options)      <- pusat berbentuk [x, y] atau {x, y}
+        buatElips(...args) {
+            const arg = this._bacaPusat(args, 2);
+            if (!arg) return this._gagal("buatElips: pusat harus [x, y] atau {x, y} berisi angka");
+
+            let cx = arg.cx, cy = arg.cy;
+            let [rx, ry] = arg.nilai;
+            const options = arg.options;
+
+            if (!this._semuaAngka(cx, cy, rx, ry) || Number(rx) < 0 || Number(ry) < 0) {
+                return this._gagal("buatElips: pusat, rx, ry harus angka, dan rx/ry tidak boleh negatif");
+            }
+            cx = Number(cx); cy = Number(cy); rx = Number(rx); ry = Number(ry);
+
             const ellipse = this._el('ellipse', { cx, cy, rx, ry });
             this._applyOptions(ellipse, options);
             this._tambah(ellipse, 'shapes');
@@ -1384,48 +1431,33 @@ buatLingkaran(a, b, c, d) {
             };
         }
 
-        // Busur Lingkaran (Arc)
-        // Sudut dalam DERAJAT. 0° = kanan, bertambah searah jarum jam di layar.
+        // Busur Lingkaran. Sudut dalam DERAJAT. Dua cara memanggil:
+        //   buatBusur(cx, cy, r, startAngle, endAngle, options)
+        //   buatBusur(pusat, r, startAngle, endAngle, options)      <- pusat berbentuk [x, y] atau {x, y}
         // options.sweep: 1 (bawaan) = searah jarum jam, 0 = berlawanan jarum jam
-        buatBusur(cx, cy, r, startAngle, endAngle, options = {}) {
-            options = { ...options };   // salin dulu (perbaikan nomor 8)
+        buatBusur(...args) {
+            const arg = this._bacaPusat(args, 3);
+            if (!arg) return this._gagal("buatBusur: pusat harus [x, y] atau {x, y} berisi angka");
+
+            let cx = arg.cx, cy = arg.cy;
+            let [r, startAngle, endAngle] = arg.nilai;
+            const options = { ...arg.options };     // salin dulu: objek milik pemanggil tidak berubah
+
             if (!this._semuaAngka(cx, cy, r, startAngle, endAngle) || Number(r) <= 0) {
-                return this._gagal("buatBusur: cx, cy, r, startAngle, endAngle harus angka, dan r harus lebih dari 0");
+                return this._gagal("buatBusur: pusat, r, startAngle, endAngle harus angka, dan r harus lebih dari 0");
             }
-            // Tentukan arah: hanya 0 / false / 'ccw' yang berarti berlawanan
-            const sweep = (options.sweep === 0 || options.sweep === false || options.sweep === 'ccw') ? 0 : 1;
+            cx = Number(cx); cy = Number(cy); r = Number(r);
+            startAngle = Number(startAngle); endAngle = Number(endAngle);
 
-            // Selisih sudut menurut arah yang dipilih
-            let span = (sweep === 1) ? (endAngle - startAngle) : (startAngle - endAngle);
+            const k = this._komponenBusur(cx, cy, r, startAngle, endAngle, options.sweep);
+            const s = k.start;
+            const dPath = k.penuh
+                // 360° atau lebih: lingkaran penuh, dipecah jadi dua busur setengah lingkaran
+                ? ["M", s.x, s.y, "A", r, r, 0, 0, k.sweep, k.tengah.x, k.tengah.y,
+                    "A", r, r, 0, 0, k.sweep, s.x, s.y].join(" ")
+                : ["M", s.x, s.y, "A", r, r, 0, k.besar, k.sweep, k.end.x, k.end.y].join(" ");
 
-            const start = this._polarToCartesian(cx, cy, r, startAngle);
-            let d;
-
-            if (Math.abs(span) >= 360) {
-                // Lingkaran penuh: pecah jadi dua busur setengah lingkaran
-                const tengah = this._polarToCartesian(cx, cy, r, startAngle + 180);
-                d = [
-                    "M", start.x, start.y,
-                    "A", r, r, 0, 0, sweep, tengah.x, tengah.y,
-                    "A", r, r, 0, 0, sweep, start.x, start.y
-                ].join(" ");
-            } else {
-                // Busur biasa: ubah selisih menjadi rentang 0 sampai 359
-                span = ((span % 360) + 360) % 360;
-                const end = this._polarToCartesian(cx, cy, r, endAngle);
-                const largeArcFlag = span > 180 ? 1 : 0;
-                d = [
-                    "M", start.x, start.y,
-                    "A", r, r, 0, largeArcFlag, sweep, end.x, end.y
-                ].join(" ");
-            }
-
-            const path = this._el('path', { d: d })
-
-            if (typeof options.fill === 'undefined') {
-                options.fill = 'none';
-            }
-
+            const path = this._el('path', { d: dPath, fill: 'none' });
             this._applyOptions(path, options);
             this._tambah(path, 'shapes');
             return path;
@@ -1478,60 +1510,68 @@ buatLingkaran(a, b, c, d) {
             return path;
         }
 
-        // Juring (potongan kue). Sudut dalam derajat. options.sweep: 1 (bawaan) searah jarum jam, 0 berlawanan.
-        buatJuring(cx, cy, r, startAngle, endAngle, options = {}) {
-            return this._bentukBusur('buatJuring', 'juring', cx, cy, r, startAngle, endAngle, options);
+        // Juring (potongan kue). Dua cara memanggil:
+        //   buatJuring(cx, cy, r, startAngle, endAngle, options)
+        //   buatJuring(pusat, r, startAngle, endAngle, options)      <- pusat berbentuk [x, y] atau {x, y}
+        buatJuring(...args) {
+            const arg = this._bacaPusat(args, 3);
+            if (!arg) return this._gagal("buatJuring: pusat harus [x, y] atau {x, y} berisi angka");
+            const [r, startAngle, endAngle] = arg.nilai;
+            return this._bentukBusur('buatJuring', 'juring', arg.cx, arg.cy, r, startAngle, endAngle, arg.options);
         }
 
-        // Tembereng (daerah antara busur dan tali busur).
-        buatTembereng(cx, cy, r, startAngle, endAngle, options = {}) {
-            return this._bentukBusur('buatTembereng', 'tembereng', cx, cy, r, startAngle, endAngle, options);
+        // Tembereng (daerah antara busur dan tali busur). Bentuk pemanggilan sama dengan buatJuring.
+        buatTembereng(...args) {
+            const arg = this._bacaPusat(args, 3);
+            if (!arg) return this._gagal("buatTembereng: pusat harus [x, y] atau {x, y} berisi angka");
+            const [r, startAngle, endAngle] = arg.nilai;
+            return this._bentukBusur('buatTembereng', 'tembereng', arg.cx, arg.cy, r, startAngle, endAngle, arg.options);
         }
 
         // Setengah lingkaran dengan diameter = garis antara dua titik ujung.
-// Dua cara memanggil:
-//   buatSetengahLingkaran(x1, y1, x2, y2, options)
-//   buatSetengahLingkaran(p1, p2, options)     <- p1, p2 berbentuk [x, y] atau {x, y}
-// options:
-//   tutup : true (bawaan) = garis diameter ikut digambar; false = hanya busur
-//   sisi  : 'kiri' (bawaan) atau 'kanan' = sisi tempat busur menggembung,
-//           dilihat dari arah p1 menuju p2 di layar
-// Opsi gaya lain (stroke, fill, strokeWidth, opacity, dashed, dst) berlaku seperti bentuk lain.
-buatSetengahLingkaran(a, b, c, d, e) {
-    const arg = this._duaTitik(a, b, c, d, e);
-    if (!arg) return this._gagal("buatSetengahLingkaran: titik harus [x, y] atau {x, y} berisi angka");
+        // Dua cara memanggil:
+        //   buatSetengahLingkaran(x1, y1, x2, y2, options)
+        //   buatSetengahLingkaran(p1, p2, options)     <- p1, p2 berbentuk [x, y] atau {x, y}
+        // options:
+        //   tutup : true (bawaan) = garis diameter ikut digambar; false = hanya busur
+        //   sisi  : 'kiri' (bawaan) atau 'kanan' = sisi tempat busur menggembung,
+        //           dilihat dari arah p1 menuju p2 di layar
+        // Opsi gaya lain (stroke, fill, strokeWidth, opacity, dashed, dst) berlaku seperti bentuk lain.
+        buatSetengahLingkaran(a, b, c, d, e) {
+            const arg = this._duaTitik(a, b, c, d, e);
+            if (!arg) return this._gagal("buatSetengahLingkaran: titik harus [x, y] atau {x, y} berisi angka");
 
-    let { x1, y1, x2, y2, options } = arg;
-    if (!this._semuaAngka(x1, y1, x2, y2)) {
-        return this._gagal("buatSetengahLingkaran: x1, y1, x2, y2 harus angka");
-    }
-    x1 = Number(x1); y1 = Number(y1); x2 = Number(x2); y2 = Number(y2);
+            let { x1, y1, x2, y2, options } = arg;
+            if (!this._semuaAngka(x1, y1, x2, y2)) {
+                return this._gagal("buatSetengahLingkaran: x1, y1, x2, y2 harus angka");
+            }
+            x1 = Number(x1); y1 = Number(y1); x2 = Number(x2); y2 = Number(y2);
 
-    const diameter = Math.hypot(x2 - x1, y2 - y1);
-    if (diameter === 0) {
-        return this._gagal("buatSetengahLingkaran: kedua titik ujung sama, diameter tidak boleh 0");
-    }
+            const diameter = Math.hypot(x2 - x1, y2 - y1);
+            if (diameter === 0) {
+                return this._gagal("buatSetengahLingkaran: kedua titik ujung sama, diameter tidak boleh 0");
+            }
 
-    const sisi = this._ada(options.sisi) ? options.sisi : 'kiri';
-    if (sisi !== 'kiri' && sisi !== 'kanan') {
-        return this._gagal(`buatSetengahLingkaran: sisi '${sisi}' tidak dikenal. Pilihan: kiri, kanan`);
-    }
+            const sisi = this._ada(options.sisi) ? options.sisi : 'kiri';
+            if (sisi !== 'kiri' && sisi !== 'kanan') {
+                return this._gagal(`buatSetengahLingkaran: sisi '${sisi}' tidak dikenal. Pilihan: kiri, kanan`);
+            }
 
-    // Di layar biasa, busur searah jarum jam (sweep 1) menggembung ke kiri arah p1 -> p2.
-    // Di mode yUp seluruh lapisan dibalik, jadi nilainya ikut dibalik.
-    const sweepKiri = this._yUp ? 0 : 1;
-    const sweep = (sisi === 'kiri') ? sweepKiri : 1 - sweepKiri;
+            // Di layar biasa, busur searah jarum jam (sweep 1) menggembung ke kiri arah p1 -> p2.
+            // Di mode yUp seluruh lapisan dibalik, jadi nilainya ikut dibalik.
+            const sweepKiri = this._yUp ? 0 : 1;
+            const sweep = (sisi === 'kiri') ? sweepKiri : 1 - sweepKiri;
 
-    const r = diameter / 2;
-    const tutup = options.tutup !== false;     // hanya false yang membuat busur terbuka
-    const dPath = `M ${x1} ${y1} A ${r} ${r} 0 0 ${sweep} ${x2} ${y2}` + (tutup ? ' Z' : '');
+            const r = diameter / 2;
+            const tutup = options.tutup !== false;     // hanya false yang membuat busur terbuka
+            const dPath = `M ${x1} ${y1} A ${r} ${r} 0 0 ${sweep} ${x2} ${y2}` + (tutup ? ' Z' : '');
 
-    const path = this._el('path', { d: dPath, fill: 'none' });
-    this._applyOptions(path, options);
-    this._tambah(path, 'shapes');
-    return path;
-}
-        
+            const path = this._el('path', { d: dPath, fill: 'none' });
+            this._applyOptions(path, options);
+            this._tambah(path, 'shapes');
+            return path;
+        }
+
         // Besar sudut dalam derajat (0 sampai 180; atau 180 sampai 360 dengan refleks: true).
         // options.desimal: jumlah angka di belakang koma (bawaan 2)
         hitungSudut(p1, vertex, p3, options = {}) {
@@ -1683,8 +1723,8 @@ buatSetengahLingkaran(a, b, c, d, e) {
             if (options.fontSize) text.setAttribute("font-size", options.fontSize);
             if (options.fontFamily) text.setAttribute("font-family", options.fontFamily);
             if (options.bold || options.fontWeight) {
-    text.setAttribute("font-weight", options.bold ? 'bold' : options.fontWeight);
-}
+                text.setAttribute("font-weight", options.bold ? 'bold' : options.fontWeight);
+            }
             this._applyTextAlignment(text, options.position);
 
             // Teks tidak punya garis tepi, kecuali diminta
@@ -1716,7 +1756,7 @@ buatSetengahLingkaran(a, b, c, d, e) {
             div.style.display = "inline-block";
             div.style.whiteSpace = "nowrap";      // rumus panjang tidak terlipat
             div.style.color = options.color || "black";
-                if (this._ada(options.opacity)) div.style.opacity = options.opacity;
+            if (this._ada(options.opacity)) div.style.opacity = options.opacity;
             if (options.fontSize) div.style.fontSize = options.fontSize;
 
             const isDisplay = options.displayMode || false;
@@ -1886,21 +1926,34 @@ buatSetengahLingkaran(a, b, c, d, e) {
             return path;
         }
 
-        // Poligon Beraturan
-        // options.startAngle dalam DERAJAT (sama seperti buatBusur).
-        // Bawaan -90 = titik sudut pertama di atas. 0 = di kanan, 90 = di bawah.
-        buatPoligonBeraturan(cx, cy, radius, sides, options = {}) {
+        // Poligon Beraturan. Dua cara memanggil:
+        //   buatPoligonBeraturan(cx, cy, radius, sides, options)
+        //   buatPoligonBeraturan(pusat, radius, sides, options)      <- pusat berbentuk [x, y] atau {x, y}
+        // options.startAngle dalam DERAJAT. Bawaan: titik sudut pertama di atas (-90 di mode biasa, 90 di mode yUp).
+        buatPoligonBeraturan(...args) {
+            const arg = this._bacaPusat(args, 2);
+            if (!arg) return this._gagal("buatPoligonBeraturan: pusat harus [x, y] atau {x, y} berisi angka");
+
+            let cx = arg.cx, cy = arg.cy;
+            let [radius, sides] = arg.nilai;
+            const options = arg.options;
+
+            if (!this._semuaAngka(cx, cy, radius) || Number(radius) <= 0) {
+                return this._gagal("buatPoligonBeraturan: pusat dan radius harus angka, dan radius harus lebih dari 0");
+            }
+            cx = Number(cx); cy = Number(cy); radius = Number(radius);
+
             // Poligon minimal punya 3 sisi
             sides = Math.floor(Number(sides));
             if (!Number.isFinite(sides) || sides < 3) {
-                console.warn(`GeoSVG: sides harus bilangan bulat >= 3, dapat: ${sides}`);
-                return null;
+                return this._gagal(`buatPoligonBeraturan: sides harus bilangan bulat >= 3, dapat: ${sides}`);
             }
 
-            const points = [];
-            const mulaiDerajat = (options.startAngle !== undefined) ? options.startAngle : (this._yUp ? 90 : -90);
-            const offset = mulaiDerajat * Math.PI / 180;   // ubah derajat -> radian
+            const bawaan = this._yUp ? 90 : -90;
+            const mulaiDerajat = (options.startAngle !== undefined) ? options.startAngle : bawaan;
+            const offset = mulaiDerajat * Math.PI / 180;   // derajat -> radian
 
+            const points = [];
             for (let i = 0; i < sides; i++) {
                 const angle = offset + (i * 2 * Math.PI / sides);
                 points.push({
