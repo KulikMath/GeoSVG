@@ -592,7 +592,9 @@
             const text = this._el('text', {
                 x: vx + jarak * Math.cos(garisBagi),
                 y: vy + jarak * Math.sin(garisBagi),
-                fill: opsi.labelColor || 'black'
+                fill: opsi.labelColor || 'black',
+    'font-weight': opsi.bold ? 'bold' : (opsi.fontWeight || 'normal'), // <-- Tambahkan baris ini
+    stroke: 'none'
             });
             text.textContent = opsi.label;
             if (opsi.fontSize) text.setAttribute("font-size", opsi.fontSize);
@@ -734,7 +736,9 @@
                     y: y + (this._yUp ? -labelAlign.dy : labelAlign.dy) + (options.dy || 0),
                     fill: options.labelColor || color,
                     'font-size': options.fontSize || "12px",
-                    'font-family': options.fontFamily || "sans-serif"
+                    'font-family': options.fontFamily || "sans-serif",
+                    'font-weight': options.bold ? 'bold' : (options.fontWeight || 'normal'), // <-- Tambahkan baris ini
+    stroke: 'none'
                 });
                 this._applyTextAlignment(text, labelAlign.alignPos);
                 text.textContent = options.label;
@@ -1236,10 +1240,28 @@
             return polyline;
         }
 
-        // Segitiga (Triangle)
-        buatSegitiga(x1, y1, x2, y2, x3, y3, options = {}) {
-            return this.buatPoligon([{ x: x1, y: y1 }, { x: x2, y: y2 }, { x: x3, y: y3 }], options);
-        }
+        // Mengenali dua bentuk pemanggilan segitiga:
+//   bentuk lama : (x1, y1, x2, y2, x3, y3, options)
+//   bentuk baru : (p1, p2, p3, options), titik boleh [x, y] atau {x, y}
+// Mengembalikan { titik: [t1, t2, t3], options }.
+_tigaTitik(a, b, c, d, e, f, g) {
+    if (typeof a === 'number' || typeof a === 'string') {
+        return { titik: [[a, b], [c, d], [e, f]], options: g || {} };
+    }
+    return { titik: [a, b, c], options: d || {} };
+}
+        // Segitiga. Dua cara memanggil:
+//   buatSegitiga(x1, y1, x2, y2, x3, y3, options)
+//   buatSegitiga(p1, p2, p3, options)      <- tiap titik berbentuk [x, y] atau {x, y}
+buatSegitiga(a, b, c, d, e, f, g) {
+    const { titik, options } = this._tigaTitik(a, b, c, d, e, f, g);
+
+    const p = titik.map(t => this._pt(t));
+    if (p.some(t => !t)) {
+        return this._gagal("buatSegitiga: titik harus [x, y] atau {x, y} berisi angka");
+    }
+    return this.buatPoligon(p.map(t => [t.x, t.y]), options);
+}
 
         // ===== LINGKARAN LUAR DAN DALAM SEGITIGA =====
 
@@ -1644,6 +1666,9 @@ buatSetengahLingkaran(a, b, c, d, e) {
 
             if (options.fontSize) text.setAttribute("font-size", options.fontSize);
             if (options.fontFamily) text.setAttribute("font-family", options.fontFamily);
+            if (options.bold || options.fontWeight) {
+    text.setAttribute("font-weight", options.bold ? 'bold' : options.fontWeight);
+}
             this._applyTextAlignment(text, options.position);
 
             // Teks tidak punya garis tepi, kecuali diminta
