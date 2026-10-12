@@ -1337,16 +1337,32 @@ buatSegitiga(a, b, c, d, e, f, g) {
             return this.buatPersegiPanjang(x, y, side, side, options);
         }
 
-        // Lingkaran (Circle)
-        buatLingkaran(cx, cy, r, options = {}) {
-            if (!this._semuaAngka(cx, cy, r) || Number(r) < 0) {
-                return this._gagal("buatLingkaran: cx, cy, r harus angka, dan r tidak boleh negatif");
-            }
-            const circle = this._el('circle', { cx, cy, r });
-            this._applyOptions(circle, options);
-            this._tambah(circle, 'shapes');
-            return circle;
-        }
+        // Lingkaran. Dua cara memanggil:
+//   buatLingkaran(cx, cy, r, options)
+//   buatLingkaran(pusat, r, options)      <- pusat berbentuk [x, y] atau {x, y}
+buatLingkaran(a, b, c, d) {
+    let cx, cy, r, options;
+
+    if (typeof a === 'number' || typeof a === 'string') {
+        // Bentuk lama
+        cx = a; cy = b; r = c; options = d || {};
+    } else {
+        // Bentuk baru
+        const p = this._pt(a);
+        if (!p) return this._gagal("buatLingkaran: pusat harus [x, y] atau {x, y} berisi angka");
+        cx = p.x; cy = p.y; r = b; options = c || {};
+    }
+
+    if (!this._semuaAngka(cx, cy, r) || Number(r) < 0) {
+        return this._gagal("buatLingkaran: pusat dan r harus angka, dan r tidak boleh negatif");
+    }
+    cx = Number(cx); cy = Number(cy); r = Number(r);
+
+    const circle = this._el('circle', { cx, cy, r });
+    this._applyOptions(circle, options);
+    this._tambah(circle, 'shapes');
+    return circle;
+}
 
         // Elips (Ellipse)
         buatElips(cx, cy, rx, ry, options = {}) {
