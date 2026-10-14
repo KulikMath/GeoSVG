@@ -2,10 +2,14 @@
 
 **Pustaka Geometri SVG Berbahasa Indonesia yang Ringan, Cepat, dan Tanpa Dependensi Wajib.**
 
-![Versi](https://img.shields.io/badge/versi-0.0.3%20Beta-2563eb)
+![Versi](https://img.shields.io/badge/versi-v0.0.3--beta-ea580c)
+![Status](https://img.shields.io/badge/status-Beta%20Publik-f59e0b)
 ![Ukuran](https://img.shields.io/badge/dependensi-0%20(murni%20JS)-16a34a)
 ![Format](https://img.shields.io/badge/modul-UMD%20%7C%20ESM%20%7C%20CommonJS-7e22ce)
-![Lisensi](https://img.shields.io/badge/lisensi-MIT-f59e0b)
+![Lisensi](https://img.shields.io/badge/lisensi-MIT-2563eb)
+
+> ⚠️ **Catatan Rilis Beta (`v0.0.3`):**  
+> **GeoSVG.js** saat ini masih berada dalam tahap **Beta** dan terus dikembangkan secara aktif. Kami sangat mengharapkan **perbaikan, saran fitur, maupun kritik membangun** dari Anda! Jika Anda menemukan *bug* atau punya ide penyempurnaan API, silakan buka laporan di halaman [**GitHub Issues**](https://github.com/KulikMath/GeoSVG/issues).
 
 **GeoSVG.js** adalah pustaka JavaScript berbasis DOM/SVG yang dirancang khusus untuk mempermudah pembuatan ilustrasi geometri matematika, bangun datar, sudut, arsiran, konstruksi garis (garis tinggi, garis sumbu, garis bagi, lingkaran luar/dalam), hingga pemetaan grafik fungsi $y = f(x)$ menggunakan API berbahasa Indonesia yang bersih dan intuitif.
 
@@ -27,16 +31,22 @@ Sangat cocok digunakan untuk bahan ajar matematika, soal ujian berbasis web (CBT
 
 ## 📦 Instalasi & Penggunaan Dasar
 
-### 1. Melalui Tag `<script>` (HTML Biasa)
+### 1. Melalui CDN jsDelivr (Paling Cepat — Tanpa Unduh File)
 
-Simpan file `GeoSVG.js` di dalam proyek Anda, lalu muat langsung pada halaman HTML:
+Anda dapat langsung memuat versi beta terbaru (`v0.0.3`) melalui CDN jsDelivr di dalam halaman HTML Anda:
+
+```html
+<script src="https://cdn.jsdelivr.net/gh/KulikMath/GeoSVG@0.0.3/GeoSVG.js"></script>
+```
+
+Contoh halaman HTML lengkap menggunakan CDN:
 
 ```html
 <!DOCTYPE html>
 <html lang="id">
 <head>
   <meta charset="UTF-8">
-  <title>Contoh GeoSVG.js</title>
+  <title>Contoh GeoSVG.js (v0.0.3 Beta)</title>
   <!-- Opsional: Muat KaTeX jika ingin menggunakan fitur buatLatex() -->
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
   <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
@@ -46,8 +56,8 @@ Simpan file `GeoSVG.js` di dalam proyek Anda, lalu muat langsung pada halaman HT
   <!-- 1. Siapkan elemen wadah (container) -->
   <div id="kanvas-geometri"></div>
 
-  <!-- 2. Muat GeoSVG.js -->
-  <script src="GeoSVG.js"></script>
+  <!-- 2. Muat GeoSVG.js via CDN jsDelivr -->
+  <script src="https://cdn.jsdelivr.net/gh/KulikMath/GeoSVG@0.0.3/GeoSVG.js"></script>
   <script>
     // 3. Inisialisasi kanvas berukuran 400x300 piksel
     const geo = new GeoSVG('kanvas-geometri', 400, 300, {
@@ -77,7 +87,15 @@ Simpan file `GeoSVG.js` di dalam proyek Anda, lalu muat langsung pada halaman HT
 </html>
 ```
 
-### 2. Melalui Bundler / Node.js (Vite, Webpack, Next.js, Nuxt)
+### 2. Melalui File Lokal (`<script>`)
+
+Jika Anda ingin bekerja secara *offline*, unduh file `GeoSVG.js` dari repositori ini, simpan di folder proyek Anda, lalu muat dengan tag `<script>`:
+
+```html
+<script src="./GeoSVG.js"></script>
+```
+
+### 3. Melalui Bundler / Node.js (Vite, Webpack, Next.js, Nuxt)
 
 `GeoSVG.js` dibungkus dengan pola UMD (*Universal Module Definition*) sehingga dapat diimpor menggunakan `import` maupun `require()`.
 
@@ -150,7 +168,7 @@ Saat mengatur `labelPosition` (pada `buatTitik`) atau `position` (pada `buatTeks
 
 | Bahasa Indonesia | Bahasa Inggris | Keterangan |
 | :--- | :--- | :--- |
-| `'kiri atas'` | `'top-left'` |Di sebelah kiri-atas titik koordinat |
+| `'kiri atas'` | `'top-left'` | Di sebelah kiri-atas titik koordinat |
 | `'tengah atas'` | `'top-center'` | Tepat di atas titik koordinat |
 | `'kanan atas'` | `'top-right'` | Di sebelah kanan-atas titik koordinat |
 | `'kiri tengah'` | `'middle-left'` | Tepat di sebelah kiri titik koordinat |
@@ -375,6 +393,17 @@ geo.buatLatex([-210, 60], 'g(x) = \\sin(x)', {
 ## 📖 Dokumentasi Interaktif Offline
 
 Repositori ini juga dilengkapi dengan file **`dokumentasi_geosvg.html`** yang dapat langsung Anda buka di browser (tanpa server lokal) untuk menjelajahi setiap kategori dan menguji kode seluruh 45 fungsi secara *live* di dalam editor interaktif.
+
+---
+
+## 💬 Masukan, Saran, & Kontribusi (Tahap Beta)
+
+Karena **GeoSVG.js** masih berada pada tahap **Beta (`v0.0.3`)**, masukan dari para pendidik, pelajar, dan pengembang web sangat berarti untuk mematangkan pustaka ini menuju versi stabil (`v1.0.0`).
+
+Anda dapat berpartisipasi dengan cara:
+1. 🐛 **Melaporkan Bug / Kendala**: Jika ada fungsi yang tidak berjalan semestinya atau perhitungan geometri yang kurang tepat, silakan buat laporan di [**GitHub Issues**](https://github.com/KulikMath/GeoSVG/issues).
+2. 💡 **Mengusulkan Fitur / Nama Method Baru**: Punya ide bangun geometri atau konstruksi matematika lain yang sering dipakai di soal sekolah? Sampaikan saran Anda!
+3. 🔧 **Pull Request (PR)**: Perbaikan kode, peningkatan performa, maupun penambahan contoh dokumentasi sangat terbuka untuk dikirimkan melalui *Pull Request*.
 
 ---
 
