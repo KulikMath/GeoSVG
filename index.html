@@ -4,34 +4,29 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Dokumentasi Resmi GeoSVG.js — Pustaka Geometri SVG Indonesia</title>
-  <!-- KaTeX untuk mendukung fungsi buatLatex() secara live -->
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.19.0/dist/katex.min.css"
-    integrity="sha384-3rdsX6e5mueWyoweR9NIVmtEsUkokpBT/0ALqKKIBMr9j4qhHkaIkAcGgsE6uVlp" crossorigin="anonymous">
-
-  <!-- The loading of KaTeX is deferred to speed up page rendering -->
-  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.19.0/dist/katex.min.js"
-    integrity="sha384-QFFtAGzvvj+bfgCGxXJlNZZR1nXEZgvG8tDLCCY1F19xl20WlfTYgguB4VcNdxYk"
-    crossorigin="anonymous"></script>
-
-  <!-- To automatically render math in text elements, include the auto-render extension: -->
-  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.19.0/dist/contrib/auto-render.min.js"
-    integrity="sha384-bjyGPfbij8/NDKJhSGZNP/khQVgtHUE5exjm4Ydllo42FwIgYsdLO2lXGmRBf5Mz"
-    crossorigin="anonymous"></script>
-  <script>document.addEventListener("DOMContentLoaded", function () {
-      renderMathInElement(document.body, {
-        // customised options
-        // • auto-render specific keys, e.g.:
-        delimiters: [
-          { left: '$$', right: '$$', display: true },
-          { left: '$', right: '$', display: false },
-          { left: '\\(', right: '\\)', display: false },
-          { left: '\\[', right: '\\]', display: true }
-        ],
-        // • rendering keys, e.g.:
-        throwOnError: false
-      });
-    });</script>
+  <title>Dokumentasi Resmi GeoSVG.js (v0.0.3 Beta) — Pustaka Geometri SVG Indonesia</title>
+  <!-- KaTeX untuk mendukung fungsi buatLatex() dan rumus matematika di teks -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.19.0/dist/katex.min.css" crossorigin="anonymous">
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.19.0/dist/katex.min.js" crossorigin="anonymous"></script>
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.19.0/dist/contrib/auto-render.min.js" crossorigin="anonymous"></script>
+  <script>
+    function renderMathHalaman(el) {
+      if (typeof renderMathInElement === 'function') {
+        renderMathInElement(el || document.body, {
+          delimiters: [
+            { left: '$$', right: '$$', display: true },
+            { left: '$', right: '$', display: false },
+            { left: '\\(', right: '\\)', display: false },
+            { left: '\\[', right: '\\]', display: true }
+          ],
+          throwOnError: false
+        });
+      }
+    }
+    document.addEventListener("DOMContentLoaded", function () {
+      renderMathHalaman(document.body);
+    });
+  </script>
   <style>
     :root {
       --bg-body: #ffffff;
@@ -93,13 +88,24 @@
     .brand {
       display: flex;
       align-items: center;
-      gap: 0.6rem;
+      gap: 0.5rem;
       font-size: 1.3rem;
       font-weight: 800;
       color: var(--primary);
       text-decoration: none;
       letter-spacing: -0.02em;
       margin-bottom: 0.25rem;
+    }
+
+    .version-badge {
+      background: #ffedd5;
+      color: #c2410c;
+      border: 1px solid #fdba74;
+      font-size: 0.68rem;
+      font-weight: 700;
+      padding: 0.1rem 0.45rem;
+      border-radius: 99px;
+      letter-spacing: 0.02em;
     }
 
     .brand-sub {
@@ -541,6 +547,22 @@
       color: #1e3a8a;
     }
 
+    .beta-callout {
+      background: #fffbeb;
+      border-left: 4px solid var(--accent-amber);
+      padding: 0.9rem 1.1rem;
+      border-radius: 0 8px 8px 0;
+      margin-bottom: 1.25rem;
+      font-size: 0.9rem;
+      color: #92400e;
+    }
+
+    .beta-callout a {
+      color: #b45309;
+      font-weight: 700;
+      text-decoration: underline;
+    }
+
     .page-nav {
       display: flex;
       justify-content: space-between;
@@ -614,15 +636,21 @@
 
   <!-- BAR ATAS UNTUK LAYAR HP -->
   <div class="topbar-mobile">
-    <a href="#pengenalan" class="brand" style="margin:0;font-size:1.15rem;">📐 GeoSVG.js</a>
+    <a href="#pengenalan" class="brand" style="margin:0;font-size:1.15rem;">
+      <span>📐 GeoSVG.js</span>
+      <span class="version-badge">v0.0.3-beta</span>
+    </a>
     <button class="menu-btn" id="mobileMenuBtn">☰ Menu Fungsi</button>
   </div>
 
   <!-- PANEL MENU KIRI (SIDEBAR) -->
   <aside class="sidebar" id="sidebar">
     <div class="sidebar-header">
-      <a href="#pengenalan" class="brand">📐 GeoSVG.js</a>
-      <div class="brand-sub">Dokumentasi Lengkap • 8 Kategori • 45 Fungsi</div>
+      <a href="#pengenalan" class="brand">
+        <span>📐 GeoSVG.js</span>
+        <span class="version-badge">v0.0.3-beta</span>
+      </a>
+      <div class="brand-sub">Dokumentasi Resmi • 8 Kategori • 45 Fungsi</div>
       <div class="search-wrapper">
         <span class="search-icon">🔍</span>
         <input type="text" id="searchInput" class="search-box" placeholder="Cari fungsi / kategori...">
@@ -1933,15 +1961,20 @@
       {
         id: "memulai",
         judul: "0. Memulai & Instalasi",
-        deskripsi: "Panduan pengenalan, cara memasang GeoSVG.js di HTML maupun Node/Bundler, inisialisasi konstruktor kanvas, dan pemeriksaan dukungan lingkungan.",
+        deskripsi: "Panduan pengenalan, cara memasang GeoSVG.js (v0.0.3 Beta) via CDN jsDelivr, file lokal, maupun Node/Bundler, inisialisasi konstruktor kanvas, dan pemeriksaan dukungan lingkungan.",
         halamanKhusus: [
           {
             id: "pengenalan",
             nama: "Pengenalan & Instalasi",
             kontenHTML: `
-              <span class="breadcrumb">Memulai & Instalasi</span>
+              <span class="breadcrumb">Memulai & Instalasi • v0.0.3-beta</span>
               <h1>Pengenalan & Instalasi GeoSVG.js</h1>
               <p class="lead"><strong>GeoSVG.js</strong> adalah pustaka JavaScript murni (tanpa dependensi wajib) berbasis SVG untuk membuat ilustrasi geometri matematika, bangun datar, sudut, arsir, konstruksi garis, dan grafik fungsi menggunakan API berbahasa Indonesia yang bersih.</p>
+
+              <div class="beta-callout">
+                <strong>⚠️ Catatan Rilis Beta (<code>v0.0.3</code>):</strong><br>
+                <strong>GeoSVG.js</strong> saat ini masih berada dalam tahap <strong>Beta Publik</strong> dan terus dikembangkan secara aktif untuk menampung perbaikan, saran fitur, maupun kritik membangun. Jika Anda menemukan <em>bug</em> atau punya usulan penyempurnaan API, silakan sampaikan melalui halaman <a href="https://github.com/KulikMath/GeoSVG/issues" target="_blank" rel="noopener noreferrer">GitHub Issues KulikMath/GeoSVG</a>.
+              </div>
 
               <div class="info-callout">
                 <strong>💡 Fitur Utama GeoSVG.js:</strong>
@@ -1953,13 +1986,21 @@
                 </ul>
               </div>
 
-              <h2>1. Instalasi via Tag &lt;script&gt; (HTML Biasa)</h2>
-              <p>Cara paling cepat adalah menyimpan file <code>GeoSVG.js</code> di proyek Anda lalu memuatnya dengan tag <code>&lt;script&gt;</code>:</p>
+              <h2>1. Instalasi via CDN jsDelivr (Paling Cepat — Tanpa Unduh File)</h2>
+              <p>Anda dapat langsung memuat rilis beta terbaru (<code>v0.0.3</code>) melalui CDN jsDelivr di dalam halaman HTML Anda. Tersedia dua pilihan versi:</p>
+              
+              <h3>A. Versi Produksi / Minified (Direkomendasikan — Ukuran Lebih Kecil & Cepat)</h3>
+              <pre><code>&lt;script src="https://cdn.jsdelivr.net/gh/KulikMath/GeoSVG@0.0.3/GeoSVG.min.js"&gt;&lt;/script&gt;</code></pre>
+
+              <h3>B. Versi Pengembangan / Unminified (Mudah untuk Debugging)</h3>
+              <pre><code>&lt;script src="https://cdn.jsdelivr.net/gh/KulikMath/GeoSVG@0.0.3/GeoSVG.js"&gt;&lt;/script&gt;</code></pre>
+
+              <p>Contoh halaman HTML lengkap menggunakan CDN <code>GeoSVG.min.js</code>:</p>
               <pre><code>&lt;!DOCTYPE html&gt;
 &lt;html lang="id"&gt;
 &lt;head&gt;
   &lt;meta charset="UTF-8"&gt;
-  &lt;title&gt;Gambar Geometri&lt;/title&gt;
+  &lt;title&gt;Gambar Geometri (GeoSVG v0.0.3 Beta)&lt;/title&gt;
   &lt;!-- Opsional: Muat KaTeX jika ingin menggunakan buatLatex() --&gt;
   &lt;link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css"&gt;
   &lt;script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"&gt;&lt;/script&gt;
@@ -1968,8 +2009,8 @@
   &lt;!-- 1. Siapkan wadah HTML --&gt;
   &lt;div id="wadah-geometri"&gt;&lt;/div&gt;
 
-  &lt;!-- 2. Muat GeoSVG.js --&gt;
-  &lt;script src="GeoSVG.js"&gt;&lt;/script&gt;
+  &lt;!-- 2. Muat GeoSVG.min.js via CDN jsDelivr --&gt;
+  &lt;script src="https://cdn.jsdelivr.net/gh/KulikMath/GeoSVG@0.0.3/GeoSVG.min.js"&gt;&lt;/script&gt;
   &lt;script&gt;
     // 3. Buat instance dan mulai menggambar
     const geo = new GeoSVG('wadah-geometri', 400, 300, {
@@ -1987,7 +2028,11 @@
 &lt;/body&gt;
 &lt;/html&gt;</code></pre>
 
-              <h2>2. Penggunaan di Node.js / Bundler (Vite, Webpack, Next.js)</h2>
+              <h2>2. Instalasi via File Lokal (Offline)</h2>
+              <p>Jika Anda ingin bekerja secara <em>offline</em>, unduh file <code>GeoSVG.min.js</code> (atau <code>GeoSVG.js</code>) dari repositori, simpan di folder proyek Anda, lalu muat dengan tag <code>&lt;script&gt;</code>:</p>
+              <pre><code>&lt;script src="./GeoSVG.min.js"&gt;&lt;/script&gt;</code></pre>
+
+              <h2>3. Penggunaan di Node.js / Bundler (Vite, Webpack, Next.js)</h2>
               <p><code>GeoSVG.js</code> menggunakan pembungkus UMD sehingga bisa diimpor dengan <code>require()</code> atau <code>import</code>. Karena membutuhkan DOM browser, gunakan <code>GeoSVG.didukung()</code> atau jalankan di dalam <code>useEffect</code> / <code>onMounted</code>:</p>
               <pre><code>import GeoSVG from './GeoSVG.js';
 
@@ -1998,7 +2043,7 @@ if (GeoSVG.didukung()) {
   });
 }</code></pre>
 
-              <h2>3. Opsi Gaya Umum (Berlaku di Semua Fungsi Gambar)</h2>
+              <h2>4. Opsi Gaya Umum (Berlaku di Semua Fungsi Gambar)</h2>
               <p>Hampir semua fungsi <code>buat...()</code> menerima parameter terakhir <code>options</code> yang mendukung atribut visual standar SVG berikut:</p>
               <div class="table-wrap">
                 <table>
@@ -2010,7 +2055,7 @@ if (GeoSVG.didukung()) {
                     <tr><td><code>strokeWidth</code></td><td><code>number</code></td><td><code>2</code></td><td>Ketebalan garis tepi dalam piksel.</td></tr>
                     <tr><td><code>fill</code></td><td><code>string</code></td><td><code>'#dbeafe'</code> atau <code>'url(#arsir)'</code></td><td>Warna isi bangun datar (bawaan: <code>'none'</code>).</td></tr>
                     <tr><td><code>dashed</code></td><td><code>boolean | number | string</code></td><td><code>true</code>, <code>5</code>, <code>'8 4 2 4'</code></td><td>Garis putus-putus otomatis tanpa perlu menghafal <code>stroke-dasharray</code>.</td></tr>
-                    <tr><td><code>opacity</code> / <code>fillOpacity</code> / <code>strokeOpacity</code></td><td><code>number</code></td><td><code>0.5</code></td><td>Tingkat transparansi (0 s.d. 1).</td></tr>
+                    <tr><td><code>opacity</code> / <code>fillOpacity</code> / <code>strokeOpacity</code></td><td><code>number</code></td><td><code>0.5</code></td><td>Tingkat transparansi ($0$ s.d. $1$).</td></tr>
                     <tr><td><code>id</code>, <code>className</code>, <code>dataset</code></td><td><code>string | Object</code></td><td><code>{ id: 'sisi-a' }</code></td><td>Atribut DOM HTML/SVG untuk seleksi CSS atau interaktivitas JS.</td></tr>
                   </tbody>
                 </table>
@@ -3511,6 +3556,7 @@ geo.buatTeks(160, 95, 'Digambar setelah clear()', { position: 'tengah', bold: tr
         for (const h of (kat.halamanKhusus || [])) {
           if (h.id === hash) {
             mainContent.innerHTML = h.kontenHTML + buatNavigasiBawah(hash);
+            renderMathHalaman(mainContent);
             window.scrollTo(0, 0);
             return;
           }
@@ -3552,6 +3598,7 @@ geo.buatTeks(160, 95, 'Digambar setelah clear()', { position: 'tengah', bold: tr
             </div>
             ${buatNavigasiBawah(hash)}
           `;
+          renderMathHalaman(mainContent);
           window.scrollTo(0, 0);
           return;
         }
@@ -3564,6 +3611,7 @@ geo.buatTeks(160, 95, 'Digambar setelah clear()', { position: 'tengah', bold: tr
           const fn = (kat.fungsi || []).find(f => f.id === fnId);
           if (fn) {
             tampilkanHalamanFungsi(kat, fn, hash);
+            renderMathHalaman(mainContent);
             window.scrollTo(0, 0);
             return;
           }
