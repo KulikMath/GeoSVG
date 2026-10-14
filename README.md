@@ -2,7 +2,7 @@
 
 **Pustaka Geometri SVG Berbahasa Indonesia yang Ringan, Cepat, dan Tanpa Dependensi Wajib.**
 
-![Versi](https://img.shields.io/badge/versi-0.0.3 Beta-2563eb)
+![Versi](https://img.shields.io/badge/versi-0.0.3%20Beta-2563eb))
 ![Ukuran](https://img.shields.io/badge/dependensi-0%20(murni%20JS)-16a34a)
 ![Format](https://img.shields.io/badge/modul-UMD%20%7C%20ESM%20%7C%20CommonJS-7e22ce)
 ![Lisensi](https://img.shields.io/badge/lisensi-MIT-f59e0b)
