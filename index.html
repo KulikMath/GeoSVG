@@ -1,0 +1,3717 @@
+<!DOCTYPE html>
+<html lang="id">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Dokumentasi Resmi GeoSVG.js — Pustaka Geometri SVG Indonesia</title>
+  <!-- KaTeX untuk mendukung fungsi buatLatex() secara live -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.19.0/dist/katex.min.css"
+    integrity="sha384-3rdsX6e5mueWyoweR9NIVmtEsUkokpBT/0ALqKKIBMr9j4qhHkaIkAcGgsE6uVlp" crossorigin="anonymous">
+
+  <!-- The loading of KaTeX is deferred to speed up page rendering -->
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.19.0/dist/katex.min.js"
+    integrity="sha384-QFFtAGzvvj+bfgCGxXJlNZZR1nXEZgvG8tDLCCY1F19xl20WlfTYgguB4VcNdxYk"
+    crossorigin="anonymous"></script>
+
+  <!-- To automatically render math in text elements, include the auto-render extension: -->
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.19.0/dist/contrib/auto-render.min.js"
+    integrity="sha384-bjyGPfbij8/NDKJhSGZNP/khQVgtHUE5exjm4Ydllo42FwIgYsdLO2lXGmRBf5Mz"
+    crossorigin="anonymous"></script>
+  <script>document.addEventListener("DOMContentLoaded", function () {
+      renderMathInElement(document.body, {
+        // customised options
+        // • auto-render specific keys, e.g.:
+        delimiters: [
+          { left: '$$', right: '$$', display: true },
+          { left: '$', right: '$', display: false },
+          { left: '\\(', right: '\\)', display: false },
+          { left: '\\[', right: '\\]', display: true }
+        ],
+        // • rendering keys, e.g.:
+        throwOnError: false
+      });
+    });</script>
+  <style>
+    :root {
+      --bg-body: #ffffff;
+      --bg-sidebar: #f8fafc;
+      --bg-card: #ffffff;
+      --bg-subtle: #f1f5f9;
+      --border: #e2e8f0;
+      --primary: #2563eb;
+      --primary-hover: #1d4ed8;
+      --primary-light: #eff6ff;
+      --text-main: #0f172a;
+      --text-secondary: #475569;
+      --text-muted: #64748b;
+      --code-bg: #0f172a;
+      --code-text: #f8fafc;
+      --accent-green: #16a34a;
+      --accent-amber: #d97706;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      color: var(--text-main);
+      background: var(--bg-body);
+      display: flex;
+      min-height: 100vh;
+      line-height: 1.6;
+    }
+
+    /* ================= SIDEBAR KIRI ================= */
+    .sidebar {
+      width: 310px;
+      background: var(--bg-sidebar);
+      border-right: 1px solid var(--border);
+      height: 100vh;
+      position: sticky;
+      top: 0;
+      overflow-y: auto;
+      display: flex;
+      flex-direction: column;
+      flex-shrink: 0;
+      user-select: none;
+    }
+
+    .sidebar-header {
+      padding: 1.25rem 1rem 0.9rem;
+      border-bottom: 1px solid var(--border);
+      background: var(--bg-sidebar);
+      position: sticky;
+      top: 0;
+      z-index: 10;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 0.6rem;
+      font-size: 1.3rem;
+      font-weight: 800;
+      color: var(--primary);
+      text-decoration: none;
+      letter-spacing: -0.02em;
+      margin-bottom: 0.25rem;
+    }
+
+    .brand-sub {
+      font-size: 0.76rem;
+      color: var(--text-muted);
+      margin-bottom: 0.85rem;
+    }
+
+    .search-wrapper {
+      position: relative;
+    }
+
+    .search-box {
+      width: 100%;
+      padding: 0.55rem 0.75rem 0.55rem 2.1rem;
+      border: 1px solid var(--border);
+      border-radius: 7px;
+      font-size: 0.86rem;
+      background: #fff;
+      color: var(--text-main);
+      outline: none;
+      transition: border-color 0.15s, box-shadow 0.15s;
+    }
+
+    .search-box:focus {
+      border-color: var(--primary);
+      box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.12);
+    }
+
+    .search-icon {
+      position: absolute;
+      left: 0.65rem;
+      top: 50%;
+      transform: translateY(-50%);
+      color: var(--text-muted);
+      font-size: 0.85rem;
+      pointer-events: none;
+    }
+
+    .sidebar-nav {
+      padding: 1rem 0.85rem 2rem;
+      flex: 1;
+    }
+
+    .nav-group {
+      margin-bottom: 1.15rem;
+    }
+
+    .nav-cat-link {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      font-size: 0.76rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: var(--text-secondary);
+      text-decoration: none;
+      padding: 0.4rem 0.55rem;
+      border-radius: 6px;
+      transition: background 0.15s, color 0.15s;
+    }
+
+    .nav-cat-link:hover,
+    .nav-cat-link.active {
+      color: var(--primary);
+      background: var(--primary-light);
+    }
+
+    .cat-count {
+      background: #e2e8f0;
+      color: var(--text-secondary);
+      font-size: 0.68rem;
+      padding: 0.05rem 0.42rem;
+      border-radius: 99px;
+      font-weight: 600;
+    }
+
+    .nav-items {
+      list-style: none;
+      margin-top: 0.2rem;
+      padding-left: 0.45rem;
+      border-left: 2px solid var(--border);
+      margin-left: 0.55rem;
+    }
+
+    .nav-item a {
+      display: block;
+      padding: 0.28rem 0.6rem;
+      color: var(--text-secondary);
+      text-decoration: none;
+      font-size: 0.84rem;
+      border-radius: 5px;
+      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+      transition: all 0.12s;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .nav-item a.text-link {
+      font-family: inherit;
+      font-weight: 500;
+    }
+
+    .nav-item a:hover {
+      background: var(--bg-subtle);
+      color: var(--text-main);
+    }
+
+    .nav-item a.active {
+      background: var(--primary);
+      color: #ffffff;
+      font-weight: 600;
+    }
+
+    /* ================= AREA KONTEN UTAMA ================= */
+    .main-wrapper {
+      flex: 1;
+      min-width: 0;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .topbar-mobile {
+      display: none;
+      padding: 0.85rem 1.25rem;
+      background: var(--bg-sidebar);
+      border-bottom: 1px solid var(--border);
+      align-items: center;
+      justify-content: space-between;
+      position: sticky;
+      top: 0;
+      z-index: 20;
+    }
+
+    .menu-btn {
+      background: var(--primary);
+      color: #fff;
+      border: none;
+      padding: 0.4rem 0.75rem;
+      border-radius: 6px;
+      font-size: 0.85rem;
+      cursor: pointer;
+      font-weight: 600;
+    }
+
+    .content {
+      padding: 2.5rem 3.25rem 4rem;
+      max-width: 1080px;
+      width: 100%;
+      margin: 0 auto;
+    }
+
+    .breadcrumb {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+      background: var(--primary-light);
+      color: var(--primary);
+      padding: 0.25rem 0.75rem;
+      border-radius: 99px;
+      font-size: 0.8rem;
+      font-weight: 600;
+      margin-bottom: 0.85rem;
+      text-decoration: none;
+    }
+
+    .breadcrumb:hover {
+      background: #dbeafe;
+    }
+
+    h1 {
+      font-size: 2.1rem;
+      font-weight: 800;
+      letter-spacing: -0.02em;
+      margin-bottom: 0.6rem;
+      color: var(--text-main);
+    }
+
+    .lead {
+      font-size: 1.05rem;
+      color: var(--text-secondary);
+      margin-bottom: 1.5rem;
+    }
+
+    h2 {
+      font-size: 1.25rem;
+      font-weight: 700;
+      margin: 2.2rem 0 0.85rem;
+      padding-bottom: 0.45rem;
+      border-bottom: 1px solid var(--border);
+      color: var(--text-main);
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    h3 {
+      font-size: 1.05rem;
+      font-weight: 600;
+      margin: 1.25rem 0 0.5rem;
+    }
+
+    p {
+      margin-bottom: 0.9rem;
+      color: var(--text-secondary);
+    }
+
+    /* BLOK KODE & TABEL */
+    pre {
+      background: var(--code-bg);
+      color: var(--code-text);
+      padding: 1rem 1.2rem;
+      border-radius: 8px;
+      overflow-x: auto;
+      font-size: 0.86rem;
+      margin-bottom: 1.25rem;
+      line-height: 1.55;
+      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+      border: 1px solid #1e293b;
+    }
+
+    code {
+      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+      background: var(--bg-subtle);
+      color: #be185d;
+      padding: 0.15rem 0.4rem;
+      border-radius: 4px;
+      font-size: 0.86em;
+    }
+
+    pre code {
+      background: none;
+      color: inherit;
+      padding: 0;
+      font-size: inherit;
+    }
+
+    .table-wrap {
+      overflow-x: auto;
+      margin-bottom: 1.5rem;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.88rem;
+    }
+
+    th,
+    td {
+      text-align: left;
+      padding: 0.65rem 0.9rem;
+      border-bottom: 1px solid var(--border);
+      vertical-align: top;
+    }
+
+    tr:last-child td {
+      border-bottom: none;
+    }
+
+    th {
+      background: var(--bg-sidebar);
+      font-weight: 600;
+      color: var(--text-main);
+      white-space: nowrap;
+    }
+
+    /* KOTAK CONTOH INTERAKTIF & HASIL CONTOH */
+    .demo-container {
+      display: grid;
+      grid-template-columns: 1.1fr 0.9fr;
+      gap: 1.25rem;
+      align-items: stretch;
+      margin-top: 0.75rem;
+    }
+
+    .code-editor-panel {
+      display: flex;
+      flex-direction: column;
+      background: var(--code-bg);
+      border-radius: 10px;
+      overflow: hidden;
+      border: 1px solid #1e293b;
+    }
+
+    .panel-toolbar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 0.55rem 0.9rem;
+      background: #1e293b;
+      color: #cbd5e1;
+      font-size: 0.76rem;
+      font-weight: 600;
+      letter-spacing: 0.03em;
+    }
+
+    .toolbar-actions {
+      display: flex;
+      gap: 0.45rem;
+    }
+
+    .btn-small {
+      background: #334155;
+      color: #f8fafc;
+      border: none;
+      padding: 0.28rem 0.65rem;
+      border-radius: 5px;
+      font-size: 0.74rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: background 0.15s;
+    }
+
+    .btn-small:hover {
+      background: #475569;
+    }
+
+    .btn-small.primary {
+      background: var(--primary);
+    }
+
+    .btn-small.primary:hover {
+      background: var(--primary-hover);
+    }
+
+    .code-textarea {
+      width: 100%;
+      flex: 1;
+      min-height: 250px;
+      background: var(--code-bg);
+      color: #e2e8f0;
+      border: none;
+      padding: 0.95rem 1.1rem;
+      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+      font-size: 0.84rem;
+      line-height: 1.55;
+      resize: vertical;
+      outline: none;
+    }
+
+    .preview-panel {
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      background: #ffffff;
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+      box-shadow: 0 2px 6px rgba(15, 23, 42, 0.03);
+    }
+
+    .preview-header {
+      padding: 0.55rem 0.9rem;
+      background: var(--bg-sidebar);
+      border-bottom: 1px solid var(--border);
+      font-size: 0.76rem;
+      font-weight: 600;
+      color: var(--text-muted);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .preview-canvas {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 1rem;
+      min-height: 250px;
+      background-image: radial-gradient(#e2e8f0 1px, transparent 1px);
+      background-size: 16px 16px;
+    }
+
+    .console-output {
+      width: 100%;
+      margin-top: 0.65rem;
+      padding: 0.55rem 0.75rem;
+      background: #f8fafc;
+      border: 1px dashed #cbd5e1;
+      border-radius: 6px;
+      font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+      font-size: 0.8rem;
+      color: #0f172a;
+    }
+
+    /* KARTU KATEGORI & FUNGSI */
+    .card-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+      gap: 1rem;
+      margin-top: 1rem;
+    }
+
+    .fn-card {
+      border: 1px solid var(--border);
+      border-radius: 9px;
+      padding: 1.1rem;
+      text-decoration: none;
+      color: inherit;
+      background: var(--bg-card);
+      transition: border-color 0.15s, box-shadow 0.15s, transform 0.15s;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+    }
+
+    .fn-card:hover {
+      border-color: var(--primary);
+      box-shadow: 0 6px 16px rgba(37, 99, 235, 0.08);
+      transform: translateY(-2px);
+    }
+
+    .fn-card h3 {
+      font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+      color: var(--primary);
+      font-size: 0.98rem;
+      margin: 0 0 0.4rem 0;
+    }
+
+    .fn-card p {
+      font-size: 0.85rem;
+      color: var(--text-muted);
+      margin: 0;
+    }
+
+    .info-callout {
+      background: var(--primary-light);
+      border-left: 4px solid var(--primary);
+      padding: 0.9rem 1.1rem;
+      border-radius: 0 8px 8px 0;
+      margin-bottom: 1.25rem;
+      font-size: 0.9rem;
+      color: #1e3a8a;
+    }
+
+    .page-nav {
+      display: flex;
+      justify-content: space-between;
+      gap: 1rem;
+      margin-top: 3rem;
+      padding-top: 1.5rem;
+      border-top: 1px solid var(--border);
+    }
+
+    .page-nav a {
+      text-decoration: none;
+      padding: 0.75rem 1rem;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      color: var(--text-main);
+      font-size: 0.88rem;
+      transition: border-color 0.15s, background 0.15s;
+      max-width: 48%;
+    }
+
+    .page-nav a:hover {
+      border-color: var(--primary);
+      background: var(--primary-light);
+    }
+
+    .page-nav span {
+      display: block;
+      font-size: 0.72rem;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      margin-bottom: 0.15rem;
+    }
+
+    @media (max-width: 960px) {
+      .demo-container {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    @media (max-width: 780px) {
+      body {
+        flex-direction: column;
+      }
+
+      .topbar-mobile {
+        display: flex;
+      }
+
+      .sidebar {
+        position: fixed;
+        left: -320px;
+        top: 0;
+        bottom: 0;
+        z-index: 50;
+        transition: left 0.25s ease;
+        box-shadow: 4px 0 20px rgba(0, 0, 0, 0.15);
+      }
+
+      .sidebar.open {
+        left: 0;
+      }
+
+      .content {
+        padding: 1.5rem 1.25rem 3rem;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+  <!-- BAR ATAS UNTUK LAYAR HP -->
+  <div class="topbar-mobile">
+    <a href="#pengenalan" class="brand" style="margin:0;font-size:1.15rem;">📐 GeoSVG.js</a>
+    <button class="menu-btn" id="mobileMenuBtn">☰ Menu Fungsi</button>
+  </div>
+
+  <!-- PANEL MENU KIRI (SIDEBAR) -->
+  <aside class="sidebar" id="sidebar">
+    <div class="sidebar-header">
+      <a href="#pengenalan" class="brand">📐 GeoSVG.js</a>
+      <div class="brand-sub">Dokumentasi Lengkap • 8 Kategori • 45 Fungsi</div>
+      <div class="search-wrapper">
+        <span class="search-icon">🔍</span>
+        <input type="text" id="searchInput" class="search-box" placeholder="Cari fungsi / kategori...">
+      </div>
+    </div>
+    <nav class="sidebar-nav" id="sidebarNav"></nav>
+  </aside>
+
+  <!-- AREA KONTEN KANAN -->
+  <div class="main-wrapper">
+    <main class="content" id="mainContent"></main>
+  </div>
+
+  <!-- ===================================================================== -->
+  <!-- PUSTAKA GEOSVG.JS (EMBEDDED LANGSUNG AGAR CONTOH LIVE SELALU BERJALAN) -->
+  <!-- ===================================================================== -->
+  <script>
+    (function (root, factory) {
+      var GeoSVG = factory();
+      if (typeof module === 'object' && module && module.exports) {
+        module.exports = GeoSVG;
+      } else if (typeof define === 'function' && define.amd) {
+        define([], function () { return GeoSVG; });
+      }
+      if (root) root.GeoSVG = GeoSVG;
+    })(typeof globalThis !== 'undefined' ? globalThis : typeof self !== 'undefined' ? self : this, function () {
+      const GEOSVG_NS = "http://www.w3.org/2000/svg";
+      const GEOSVG_ALIAS = {
+        konstruktor: {
+          margin: ['padding'],
+          background: ['backgroundColor'],
+          title: ['judul'],
+          description: ['desc', 'deskripsi']
+        },
+        titik: { labelDistance: ['labelPadding', 'offset'] },
+        teks: { fill: ['color'] },
+        tandaSamaPanjang: {
+          count: ['ticks', 'jumlah'],
+          size: ['length', 'panjang'],
+          spacing: ['gap', 'jarak'],
+          stroke: ['color']
+        },
+        sudut: { labelColor: ['color'], refleks: ['reflex'] },
+        siku: { size: ['radius'], dot: ['showDot'], labelColor: ['color'] },
+        polaArsir: { stroke: ['color'] }
+      };
+      const GEOSVG_GAYA_UMUM = [
+        'strokeDashoffset', 'strokeLinecap', 'strokeLinejoin', 'strokeMiterlimit',
+        'opacity', 'fillRule', 'clipRule', 'vectorEffect', 'pointerEvents',
+        'visibility', 'cursor', 'transform'
+      ];
+      const GEOSVG_KEBAB = nama => nama.replace(/[A-Z]/g, huruf => '-' + huruf.toLowerCase());
+      const GEOSVG_POSISI_ALIAS = {
+        'kiri atas': 'top-left', 'tengah atas': 'top-center', 'kanan atas': 'top-right',
+        'kiri tengah': 'middle-left', 'tengah': 'middle-center', 'kanan tengah': 'middle-right',
+        'kiri bawah': 'bottom-left', 'tengah bawah': 'bottom-center', 'kanan bawah': 'bottom-right'
+      };
+      class GeoSVG {
+        _el(tag, atribut = {}, induk = null) {
+          const el = document.createElementNS(GEOSVG_NS, tag);
+          for (const [nama, nilai] of Object.entries(atribut)) {
+            if (nilai !== undefined && nilai !== null) el.setAttribute(nama, nilai);
+          }
+          if (induk) induk.appendChild(el);
+          return el;
+        }
+        _bersihTeks(teks) {
+          return (teks === undefined || teks === null) ? '' : String(teks).trim();
+        }
+        _cariAnak(tag) {
+          return Array.from(this.svg.children).find(c => c.tagName === tag) || null;
+        }
+        _perbaruiAria() {
+          const judul = this._cariAnak('title');
+          const desk = this._cariAnak('desc');
+          if (judul || desk) this.svg.setAttribute('role', 'img');
+          else this.svg.removeAttribute('role');
+          if (judul) this.svg.setAttribute('aria-labelledby', judul.id);
+          else this.svg.removeAttribute('aria-labelledby');
+          if (desk) this.svg.setAttribute('aria-describedby', desk.id);
+          else this.svg.removeAttribute('aria-describedby');
+        }
+        setJudul(teks) {
+          const bersih = this._bersihTeks(teks);
+          let el = this._cariAnak('title');
+          if (!bersih) {
+            if (el) el.remove();
+            el = null;
+          } else {
+            if (!el) {
+              el = this._el('title', { id: this._id('title') });
+              this.svg.insertBefore(el, this.svg.firstChild);
+            }
+            el.textContent = bersih;
+          }
+          this._perbaruiAria();
+          return el;
+        }
+        setDeskripsi(teks) {
+          const bersih = this._bersihTeks(teks);
+          let el = this._cariAnak('desc');
+          if (!bersih) {
+            if (el) el.remove();
+            el = null;
+          } else {
+            if (!el) {
+              el = this._el('desc', { id: this._id('desc') });
+              const judul = this._cariAnak('title');
+              this.svg.insertBefore(el, judul ? judul.nextSibling : this.svg.firstChild);
+            }
+            el.textContent = bersih;
+          }
+          this._perbaruiAria();
+          return el;
+        }
+        _buatLapisan(nama) {
+          const g = this._el('g', { class: `layer-${nama}`, transform: this._transformYUp }, this.svg);
+          this._layers[nama] = g;
+          return g;
+        }
+        _getLapisan(nama = 'shapes') {
+          nama = String(nama || 'shapes');
+          return this._layers[nama] || this._buatLapisan(nama);
+        }
+        _tambah(el, nama = 'shapes') {
+          if (this._destroyed) {
+            return this._gagal("instance ini sudah di-destroy(); buat instance baru untuk menggambar lagi");
+          }
+          nama = String(nama || 'shapes');
+          if (this._batch) {
+            if (!this._batch[nama]) this._batch[nama] = document.createDocumentFragment();
+            this._batch[nama].appendChild(el);
+          } else {
+            this._getLapisan(nama).appendChild(el);
+          }
+          return el;
+        }
+        pindahKeLapisan(element, nama) {
+          if (!(element instanceof Node)) return this._gagal("pindahKeLapisan: elemen tidak valid");
+          this._getLapisan(nama).appendChild(element);
+          return element;
+        }
+        mulaiBatch() {
+          this._batchDepth = (this._batchDepth || 0) + 1;
+          if (this._batchDepth === 1) this._batch = {};
+        }
+        selesaiBatch() {
+          if (!this._batchDepth) return;
+          this._batchDepth--;
+          if (this._batchDepth > 0) return;
+          const batch = this._batch;
+          this._batch = null;
+          for (const [nama, kotak] of Object.entries(batch)) {
+            this._getLapisan(nama).appendChild(kotak);
+          }
+        }
+        batch(fn) {
+          this.mulaiBatch();
+          try { return fn(this); } finally { this.selesaiBatch(); }
+        }
+        static didukung() {
+          return typeof document !== 'undefined' && typeof document.createElementNS === 'function';
+        }
+        constructor(containerId, width, height, options = {}) {
+          if (!GeoSVG.didukung()) {
+            throw new Error("GeoSVG: library ini butuh browser (objek 'document' tidak ditemukan).");
+          }
+          if (typeof width === 'object' && width !== null) {
+            options = width;
+            width = options.width;
+            height = options.height;
+          }
+          this.strict = options.strict === true;
+          this.container = (typeof containerId === 'string') ? document.getElementById(containerId) : containerId;
+          if (!(this.container instanceof Element)) {
+            throw new Error(`GeoSVG: container '${containerId}' tidak ditemukan.`);
+          }
+          this.svg = this._el('svg');
+          this.svg.setAttribute("fill", "none");
+          this.svg.setAttribute("stroke", options.defaultStroke || "black");
+          if (this._ada(options.defaultStrokeWidth)) {
+            this.svg.setAttribute("stroke-width", options.defaultStrokeWidth);
+          }
+          const numWidth = this._ukuranAngka(width);
+          const numHeight = this._ukuranAngka(height);
+          options = this._normalizeOptions(options, GEOSVG_ALIAS.konstruktor);
+          const margin = this._ada(options.margin) ? options.margin : 0;
+          this.svg.setAttribute("width", this._ada(width) ? width : "100%");
+          this.svg.setAttribute("height", this._ada(height) ? height : "100%");
+          if (options.viewBox) {
+            if (typeof options.viewBox === 'string') {
+              this.svg.setAttribute("viewBox", options.viewBox);
+            } else if (!isNaN(numWidth) && !isNaN(numHeight)) {
+              this.svg.setAttribute("viewBox", `${-margin} ${-margin} ${numWidth + 2 * margin} ${numHeight + 2 * margin}`);
+            }
+          } else if (margin > 0 && !isNaN(numWidth) && !isNaN(numHeight)) {
+            this.svg.setAttribute("viewBox", `${-margin} ${-margin} ${numWidth + 2 * margin} ${numHeight + 2 * margin}`);
+          }
+          if (options.preserveAspectRatio) {
+            this.svg.setAttribute("preserveAspectRatio", options.preserveAspectRatio);
+          }
+          this.svg.style.overflow = options.overflow || 'visible';
+          this.svg.style.backgroundColor = options.background || 'transparent';
+          GeoSVG._counter = (GeoSVG._counter || 0) + 1;
+          this.uid = 'geo' + GeoSVG._counter;
+          this._markers = new Map();
+          this.defs = this._el('defs', {}, this.svg);
+          this._yUp = false;
+          this._transformYUp = null;
+          if (options.yUp === true) {
+            const area = this._areaTetap();
+            if (!area) {
+              this._gagal("yUp butuh viewBox atau width/height berupa angka pasti.");
+            } else {
+              this._yUp = true;
+              this._transformYUp = `translate(0 ${2 * area.minY + area.h}) scale(1 -1)`;
+            }
+          }
+          this._layers = {};
+          this._batch = null;
+          this._batchDepth = 0;
+          this._destroyed = false;
+          ['grid', 'shapes', 'labels'].forEach(nama => this._buatLapisan(nama));
+          if (options.dekoratif === true) {
+            this.svg.setAttribute("aria-hidden", "true");
+          } else {
+            this.setJudul(options.title);
+            this.setDeskripsi(options.description);
+          }
+          GeoSVG._daftar = GeoSVG._daftar || new WeakMap();
+          let daftar = GeoSVG._daftar.get(this.container);
+          if (!daftar) {
+            daftar = new Set();
+            GeoSVG._daftar.set(this.container, daftar);
+          }
+          if (options.clearContainer === true) {
+            [...daftar].forEach(lama => lama.destroy());
+            while (this.container.firstChild) {
+              this.container.removeChild(this.container.firstChild);
+            }
+          }
+          daftar.add(this);
+          this.container.appendChild(this.svg);
+        }
+        _gagal(pesan) {
+          const teks = `GeoSVG: ${pesan}`;
+          if (this.strict) throw new Error(teks);
+          console.warn(teks);
+          return null;
+        }
+        _semuaAngka(...nilai) {
+          return nilai.every(v =>
+            typeof v === 'number' ? Number.isFinite(v) : (typeof v === 'string' && v.trim() !== '' && Number.isFinite(Number(v)))
+          );
+        }
+        _pt(p) {
+          if (Array.isArray(p) && this._semuaAngka(p[0], p[1])) return { x: Number(p[0]), y: Number(p[1]) };
+          if (p && typeof p === 'object' && this._semuaAngka(p.x, p.y)) return { x: Number(p.x), y: Number(p.y) };
+          return null;
+        }
+        _ukuranAngka(nilai) {
+          if (typeof nilai === 'number') return Number.isFinite(nilai) ? nilai : NaN;
+          if (typeof nilai === 'string') {
+            const teks = nilai.trim();
+            if (/^\d*\.?\d+(px)?$/i.test(teks)) return parseFloat(teks);
+          }
+          return NaN;
+        }
+        _id(name) { return `${this.uid}-${name}`; }
+        _getMarker(color = 'black', reverse = false) {
+          const key = `${reverse ? 'rev' : 'fwd'}|${color}`;
+          if (this._markers.has(key)) return this._markers.get(key);
+          const id = this._id(`marker-${this._markers.size}`);
+          const marker = this._el('marker', {
+            id, markerWidth: 10, markerHeight: 7, refX: reverse ? 1 : 9, refY: 3.5, orient: 'auto'
+          }, this.defs);
+          this._el('polygon', {
+            points: reverse ? "10 0, 0 3.5, 10 7" : "0 0, 10 3.5, 0 7", fill: color, stroke: 'none'
+          }, marker);
+          this._markers.set(key, id);
+          return id;
+        }
+        _ada(nilai) { return nilai !== undefined && nilai !== null; }
+        _normalizeOptions(opts, aliasMap = {}) {
+          const hasil = (opts && typeof opts === 'object') ? { ...opts } : {};
+          for (const [namaBaku, daftarAlias] of Object.entries(aliasMap)) {
+            if (this._ada(hasil[namaBaku])) continue;
+            for (const alias of daftarAlias) {
+              if (this._ada(hasil[alias])) {
+                hasil[namaBaku] = hasil[alias];
+                break;
+              }
+            }
+          }
+          return hasil;
+        }
+        _nilaiDashed(dashed) {
+          if (dashed === true) return "6 4";
+          if (typeof dashed === 'number' && dashed > 0) return `${dashed} ${dashed}`;
+          if (typeof dashed === 'string' && dashed.trim() !== '') return dashed;
+          return null;
+        }
+        _applyExtras(element, options) {
+          if (!options) return;
+          const dash = this._ada(options.strokeDasharray) ? options.strokeDasharray : this._nilaiDashed(options.dashed);
+          if (this._ada(dash)) element.setAttribute("stroke-dasharray", dash);
+          for (const nama of GEOSVG_GAYA_UMUM) {
+            if (this._ada(options[nama])) element.setAttribute(GEOSVG_KEBAB(nama), options[nama]);
+          }
+          if (options.id) element.setAttribute("id", options.id);
+          const kelas = options.className || options.class;
+          if (kelas) element.setAttribute("class", kelas);
+          if (options.dataset && typeof options.dataset === 'object') {
+            for (const [kunci, nilai] of Object.entries(options.dataset)) {
+              element.setAttribute("data-" + GEOSVG_KEBAB(kunci), nilai);
+            }
+          }
+        }
+        _applyOptions(element, options) {
+          if (!options) return;
+          if (options.stroke) element.setAttribute("stroke", options.stroke);
+          if (options.fill) element.setAttribute("fill", options.fill);
+          if (this._ada(options.strokeWidth)) element.setAttribute("stroke-width", options.strokeWidth);
+          if (this._ada(options.fillOpacity)) element.setAttribute("fill-opacity", options.fillOpacity);
+          if (this._ada(options.strokeOpacity)) element.setAttribute("stroke-opacity", options.strokeOpacity);
+          this._applyExtras(element, options);
+        }
+        _normalisasiPosisi(posisi, bawaan) {
+          return GEOSVG_POSISI_ALIAS[posisi] || posisi || bawaan;
+        }
+        _getAlignmentProps(position) {
+          const tabel = {
+            'top-left': ['end', 'alphabetic', 1, 1], 'top-center': ['middle', 'alphabetic', 0.5, 1], 'top-right': ['start', 'alphabetic', 0, 1],
+            'middle-left': ['end', 'central', 1, 0.5], 'middle-center': ['middle', 'central', 0.5, 0.5], 'middle-right': ['start', 'central', 0, 0.5],
+            'bottom-left': ['end', 'hanging', 1, 0], 'bottom-center': ['middle', 'hanging', 0.5, 0], 'bottom-right': ['start', 'hanging', 0, 0]
+          };
+          let pos = this._normalisasiPosisi(position, 'bottom-left');
+          if (!tabel[pos]) pos = 'bottom-left';
+          const [anchor, baseline, alignX, alignY] = tabel[pos];
+          return { anchor, baseline, alignX, alignY, pos };
+        }
+        _tegakkanTeks(text) {
+          if (!this._yUp) return;
+          const x = Number(text.getAttribute('x'));
+          const y = Number(text.getAttribute('y'));
+          text.setAttribute('transform', `translate(${x} ${y}) scale(1 -1) translate(${-x} ${-y})`);
+        }
+        _applyTextAlignment(textElement, position) {
+          const props = this._getAlignmentProps(position || 'bottom-left');
+          textElement.setAttribute("text-anchor", props.anchor);
+          textElement.setAttribute("dominant-baseline", props.baseline);
+          return props;
+        }
+        _getLabelAlignment(labelPosition, padding) {
+          const pos = this._normalisasiPosisi(labelPosition, 'top-right');
+          const tabel = {
+            'top-left': [-1, -1, 'top-left'], 'top-center': [0, -1, 'top-center'], 'top-right': [1, -1, 'top-right'],
+            'middle-left': [-1, 0, 'middle-left'], 'middle-center': [0, 0, 'middle-center'], 'middle-right': [1, 0, 'middle-right'],
+            'bottom-left': [-1, 1, 'bottom-left'], 'bottom-center': [0, 1, 'bottom-center'], 'bottom-right': [1, 1, 'bottom-right']
+          };
+          const [kx, ky, alignPos] = tabel[pos] || [0, 0, 'top-right'];
+          return { dx: kx * padding, dy: ky * padding, alignPos };
+        }
+        _normalSudut(selisih) {
+          if (!Number.isFinite(selisih)) return 0;
+          while (selisih <= -Math.PI) selisih += 2 * Math.PI;
+          while (selisih > Math.PI) selisih -= 2 * Math.PI;
+          return selisih;
+        }
+        _tambahLabelSudut(group, vx, vy, a1, diff, radiusDasar, opsi) {
+          if (!opsi.label) return null;
+          const garisBagi = a1 + diff / 2;
+          const jarak = opsi.labelRadius || (radiusDasar + 15);
+          const text = this._el('text', {
+            x: vx + jarak * Math.cos(garisBagi),
+            y: vy + jarak * Math.sin(garisBagi),
+            fill: opsi.labelColor || 'black',
+            'font-weight': opsi.bold ? 'bold' : (opsi.fontWeight || 'normal'),
+            stroke: 'none'
+          });
+          text.textContent = opsi.label;
+          if (opsi.fontSize) text.setAttribute("font-size", opsi.fontSize);
+          if (opsi.fontFamily) text.setAttribute("font-family", opsi.fontFamily);
+          this._applyTextAlignment(text, opsi.labelPosition || 'middle-center');
+          this._tegakkanTeks(text);
+          group.appendChild(text);
+          return text;
+        }
+        _titikSejajar(refP1, refP2, lewat) {
+          const a = this._pt(refP1), b = this._pt(refP2);
+          if (!a || !b) return null;
+          const dx = b.x - a.x, dy = b.y - a.y, len = Math.hypot(dx, dy);
+          if (len === 0) return null;
+          let px, py;
+          if (typeof lewat === 'number') {
+            px = a.x + (-dy / len) * lewat;
+            py = a.y + (dx / len) * lewat;
+          } else {
+            const t = this._pt(lewat);
+            if (!t) return null;
+            px = t.x; py = t.y;
+          }
+          return { px, py, dx, dy, len };
+        }
+        _klipGaris(x1, y1, x2, y2, pad = 5) {
+          const area = this._getAreaGambar();
+          const xMin = area.minX - pad, xMax = area.minX + area.w + pad;
+          const yMin = area.minY - pad, yMax = area.minY + area.h + pad;
+          const dx = x2 - x1, dy = y2 - y1;
+          const batas = [[-dx, x1 - xMin], [dx, xMax - x1], [-dy, y1 - yMin], [dy, yMax - y1]];
+          let tAwal = -Infinity, tAkhir = Infinity;
+          for (const [p, q] of batas) {
+            if (p === 0) { if (q < 0) return null; }
+            else {
+              const t = q / p;
+              if (p < 0) tAwal = Math.max(tAwal, t);
+              else tAkhir = Math.min(tAkhir, t);
+            }
+          }
+          if (tAwal > tAkhir) return null;
+          return { x1: x1 + tAwal * dx, y1: y1 + tAwal * dy, x2: x1 + tAkhir * dx, y2: y1 + tAkhir * dy };
+        }
+        _bulat(n, desimal = 3) {
+          const faktor = 10 ** desimal;
+          return Math.round(n * faktor) / faktor;
+        }
+        buatTitik(x, y, options = {}) {
+          if (x !== null && typeof x === 'object') {
+            const p = this._pt(x);
+            if (!p) return this._gagal("buatTitik: titik harus [x, y] atau {x, y} berisi angka");
+            options = y || {}; x = p.x; y = p.y;
+          }
+          if (!this._semuaAngka(x, y)) return this._gagal("buatTitik: x dan y harus angka");
+          x = Number(x); y = Number(y);
+          options = this._normalizeOptions(options, GEOSVG_ALIAS.titik);
+          const marker = options.marker || 'full-circle';
+          const size = this._ada(options.size) ? options.size : 4;
+          const color = options.color || 'black';
+          const group = this._el('g');
+          if (marker === 'full-circle') {
+            this._el('circle', { cx: x, cy: y, r: size, fill: color, stroke: 'none' }, group);
+          } else if (marker === 'empty-circle') {
+            this._el('circle', { cx: x, cy: y, r: size, fill: 'none', stroke: color, 'stroke-width': 1.5 }, group);
+          } else if (marker === 'diamond') {
+            this._el('polygon', { points: `${x},${y - size} ${x + size},${y} ${x},${y + size} ${x - size},${y}`, fill: color, stroke: 'none' }, group);
+          } else if (marker === 'plus') {
+            this._el('path', { d: `M ${x - size} ${y} L ${x + size} ${y} M ${x} ${y - size} L ${x} ${y + size}`, stroke: color, 'stroke-width': 1.5 }, group);
+          }
+          if (options.label) {
+            const padding = this._ada(options.labelDistance) ? options.labelDistance : size + 4;
+            const labelAlign = this._getLabelAlignment(options.labelPosition, padding);
+            const text = this._el('text', {
+              x: x + labelAlign.dx + (options.dx || 0),
+              y: y + (this._yUp ? -labelAlign.dy : labelAlign.dy) + (options.dy || 0),
+              fill: options.labelColor || color,
+              'font-size': options.fontSize || "12px",
+              'font-family': options.fontFamily || "sans-serif",
+              'font-weight': options.bold ? 'bold' : (options.fontWeight || 'normal'),
+              stroke: 'none'
+            });
+            this._applyTextAlignment(text, labelAlign.alignPos);
+            text.textContent = options.label;
+            this._tegakkanTeks(text);
+            group.appendChild(text);
+          }
+          if (this._ada(options.opacity)) group.setAttribute('opacity', options.opacity);
+          this._tambah(group, 'shapes');
+          return group;
+        }
+        hitungTitikTengah(p1, p2) {
+          const a = this._pt(p1), b = this._pt(p2);
+          if (!a || !b) return this._gagal("hitungTitikTengah: p1 dan p2 harus titik valid");
+          return [(a.x + b.x) / 2, (a.y + b.y) / 2];
+        }
+        buatTitikTengah(p1, p2, options = {}) {
+          const t = this.hitungTitikTengah(p1, p2);
+          return t ? this.buatTitik(t, options) : null;
+        }
+        buatGaris(a, b, c, d, e) {
+          const arg = this._duaTitik(a, b, c, d, e);
+          if (!arg) return this._gagal("buatGaris: titik tidak valid");
+          let { x1, y1, x2, y2, options } = arg;
+          x1 = Number(x1); y1 = Number(y1); x2 = Number(x2); y2 = Number(y2);
+          if (x1 === x2 && y1 === y2) return null;
+          const pad = this._ada(options.clipPad) ? options.clipPad : 5;
+          const klip = this._klipGaris(x1, y1, x2, y2, pad);
+          const line = this._el('line', klip ? { x1: klip.x1, y1: klip.y1, x2: klip.x2, y2: klip.y2 } : { x1, y1, x2, y2, display: 'none' });
+          this._applyOptions(line, options);
+          this._tambah(line, 'shapes');
+          return line;
+        }
+        _duaTitik(a, b, c, d, e) {
+          if (typeof a === 'number' || typeof a === 'string') return { x1: a, y1: b, x2: c, y2: d, options: e || {} };
+          const p1 = this._pt(a), p2 = this._pt(b);
+          if (!p1 || !p2) return null;
+          return { x1: p1.x, y1: p1.y, x2: p2.x, y2: p2.y, options: c || {} };
+        }
+        buatSegmen(a, b, c, d, e) {
+          const arg = this._duaTitik(a, b, c, d, e);
+          if (!arg) return null;
+          const { x1, y1, x2, y2, options } = arg;
+          const line = this._el('line', { x1, y1, x2, y2 });
+          this._applyOptions(line, options);
+          this._tambah(line, 'shapes');
+          return line;
+        }
+        buatGarisSejajar(refP1, refP2, passThroughOrDistance, options = {}) {
+          const s = this._titikSejajar(refP1, refP2, passThroughOrDistance);
+          if (!s) return null;
+          return this.buatGaris(s.px, s.py, s.px + s.dx, s.py + s.dy, options);
+        }
+        hitungKakiTegakLurus(p, a, b) {
+          const P = this._pt(p), A = this._pt(a), B = this._pt(b);
+          if (!P || !A || !B) return null;
+          const dx = B.x - A.x, dy = B.y - A.y, kuadrat = dx * dx + dy * dy;
+          if (kuadrat === 0) return null;
+          const t = ((P.x - A.x) * dx + (P.y - A.y) * dy) / kuadrat;
+          return [A.x + t * dx, A.y + t * dy];
+        }
+        buatGarisTegakLurus(p1, p2, lewat = 'tengah', options = {}) {
+          const a = this._pt(p1), b = this._pt(p2);
+          if (!a || !b) return null;
+          const dx = b.x - a.x, dy = b.y - a.y;
+          let t = (lewat === 'tengah') ? { x: (a.x + b.x) / 2, y: (a.y + b.y) / 2 } : this._pt(lewat);
+          if (!t) return null;
+          return this.buatGaris(t.x, t.y, t.x - dy, t.y + dx, options);
+        }
+        hitungGarisBagi(p1, vertex, p3) {
+          const a = this._pt(p1), v = this._pt(vertex), c = this._pt(p3);
+          if (!a || !v || !c) return null;
+          const l1 = Math.hypot(a.x - v.x, a.y - v.y), l2 = Math.hypot(c.x - v.x, c.y - v.y);
+          if (l1 === 0 || l2 === 0) return null;
+          const u1x = (a.x - v.x) / l1, u1y = (a.y - v.y) / l1, u2x = (c.x - v.x) / l2, u2y = (c.y - v.y) / l2;
+          let sx = u1x + u2x, sy = u1y + u2y, panjang = Math.hypot(sx, sy);
+          if (panjang < 1e-9) { sx = -u1y; sy = u1x; panjang = 1; }
+          return { titik: [v.x, v.y], arah: [sx / panjang, sy / panjang] };
+        }
+        buatGarisBagi(p1, vertex, p3, options = {}) {
+          const g = this.hitungGarisBagi(p1, vertex, p3);
+          if (!g) return null;
+          let ujung;
+          if (options.sampai) {
+            const potong = this.hitungTitikPotong([g.titik, [g.titik[0] + g.arah[0], g.titik[1] + g.arah[1]]], options.sampai);
+            if (!potong || potong.length !== 1) return null;
+            ujung = potong[0];
+          } else {
+            const panjang = this._ada(options.panjang) ? Number(options.panjang) : 100;
+            ujung = [g.titik[0] + g.arah[0] * panjang, g.titik[1] + g.arah[1] * panjang];
+          }
+          return this.buatSegmen(g.titik[0], g.titik[1], ujung[0], ujung[1], options);
+        }
+        _objekGeo(o) {
+          if (o && !Array.isArray(o) && typeof o === 'object' && this._ada(o.r)) {
+            const c = this._ada(o.pusat) ? this._pt(o.pusat) : this._pt([o.cx, o.cy]);
+            const r = Number(o.r);
+            if (c && Number.isFinite(r) && r > 0) return { tipe: 'lingkaran', c, r };
+            return null;
+          }
+          if (Array.isArray(o) && o.length === 2) {
+            const a = this._pt(o[0]), b = this._pt(o[1]);
+            if (a && b && !(a.x === b.x && a.y === b.y)) return { tipe: 'garis', a, b };
+          }
+          return null;
+        }
+        _potongGarisGaris(A, B) {
+          const d1x = A.b.x - A.a.x, d1y = A.b.y - A.a.y, d2x = B.b.x - B.a.x, d2y = B.b.y - B.a.y;
+          const det = d1x * d2y - d1y * d2x;
+          if (Math.abs(det) <= 1e-9) return [];
+          const t = ((B.a.x - A.a.x) * d2y - (B.a.y - A.a.y) * d2x) / det;
+          return [{ x: A.a.x + t * d1x, y: A.a.y + t * d1y }];
+        }
+        _potongGarisLingkaran(G, C) {
+          const dx = G.b.x - G.a.x, dy = G.b.y - G.a.y, fx = G.a.x - C.c.x, fy = G.a.y - C.c.y;
+          const a = dx * dx + dy * dy, b = 2 * (fx * dx + fy * dy), c = fx * fx + fy * fy - C.r * C.r;
+          const diskriminan = b * b - 4 * a * c;
+          if (diskriminan < 0) return [];
+          const titikPada = t => ({ x: G.a.x + t * dx, y: G.a.y + t * dy });
+          if (Math.abs(diskriminan) <= 1e-9) return [titikPada(-b / (2 * a))];
+          const akar = Math.sqrt(diskriminan);
+          return [titikPada((-b - akar) / (2 * a)), titikPada((-b + akar) / (2 * a))];
+        }
+        _potongLingkaranLingkaran(A, B) {
+          const dx = B.c.x - A.c.x, dy = B.c.y - A.c.y, d = Math.hypot(dx, dy);
+          if (d === 0 || d > A.r + B.r || d < Math.abs(A.r - B.r)) return [];
+          const a = (A.r * A.r - B.r * B.r + d * d) / (2 * d);
+          const h = Math.sqrt(Math.max(0, A.r * A.r - a * a));
+          const mx = A.c.x + a * dx / d, my = A.c.y + a * dy / d;
+          if (h <= 1e-6) return [{ x: mx, y: my }];
+          return [{ x: mx - h * dy / d, y: my + h * dx / d }, { x: mx + h * dy / d, y: my - h * dx / d }];
+        }
+        _dalamSegmen(p, G) {
+          const dx = G.b.x - G.a.x, dy = G.b.y - G.a.y;
+          const t = ((p.x - G.a.x) * dx + (p.y - G.a.y) * dy) / (dx * dx + dy * dy);
+          return t >= -1e-9 && t <= 1 + 1e-9;
+        }
+        hitungTitikPotong(objA, objB, options = {}) {
+          const A = this._objekGeo(objA), B = this._objekGeo(objB);
+          if (!A || !B) return null;
+          let hasil;
+          if (A.tipe === 'garis' && B.tipe === 'garis') hasil = this._potongGarisGaris(A, B);
+          else if (A.tipe === 'lingkaran' && B.tipe === 'lingkaran') hasil = this._potongLingkaranLingkaran(A, B);
+          else hasil = (A.tipe === 'garis') ? this._potongGarisLingkaran(A, B) : this._potongGarisLingkaran(B, A);
+          if (options && options.segmen === true) {
+            hasil = hasil.filter(p => [A, B].every(o => o.tipe !== 'garis' || this._dalamSegmen(p, o)));
+          }
+          return hasil.map(p => [p.x, p.y]);
+        }
+        buatTitikPotong(objA, objB, options = {}) {
+          const titik = this.hitungTitikPotong(objA, objB, options);
+          if (!titik) return null;
+          return titik.map((p, i) => {
+            const opsi = { ...options };
+            if (Array.isArray(options.label)) opsi.label = options.label[i];
+            return this.buatTitik(p, opsi);
+          });
+        }
+        buatTitikPotongGaris(l1p1, l1p2, l2p1, l2p2, options = {}) {
+          const p1 = this._pt(l1p1), p2 = this._pt(l1p2), p3 = this._pt(l2p1), p4 = this._pt(l2p2);
+          if (!p1 || !p2 || !p3 || !p4) return null;
+          const denom = (p1.x - p2.x) * (p3.y - p4.y) - (p1.y - p2.y) * (p3.x - p4.x);
+          if (denom === 0) return null;
+          const x = ((p1.x * p2.y - p1.y * p2.x) * (p3.x - p4.x) - (p1.x - p2.x) * (p3.x * p4.y - p3.y * p4.x)) / denom;
+          const y = ((p1.x * p2.y - p1.y * p2.x) * (p3.y - p4.y) - (p1.y - p2.y) * (p3.x * p4.y - p3.y * p4.x)) / denom;
+          return this.buatTitik(x, y, options);
+        }
+        buatSegmenSejajar(refP1, refP2, passThroughOrDistance, options = {}) {
+          const s = this._titikSejajar(refP1, refP2, passThroughOrDistance);
+          if (!s) return null;
+          let x2 = s.px + s.dx, y2 = s.py + s.dy;
+          if (options.length !== undefined) {
+            x2 = s.px + (s.dx / s.len) * options.length;
+            y2 = s.py + (s.dy / s.len) * options.length;
+          }
+          return this.buatSegmen(s.px, s.py, x2, y2, options);
+        }
+        buatTandaSamaPanjang(p1, p2, p3, p4, options = {}) {
+          let pt1, pt2, opts;
+          if (typeof p1 === 'number' && typeof p2 === 'number') {
+            pt1 = [p1, p2]; pt2 = [p3, p4]; opts = options || {};
+          } else {
+            pt1 = p1; pt2 = p2; opts = p3 || {};
+          }
+          opts = this._normalizeOptions(opts, GEOSVG_ALIAS.tandaSamaPanjang);
+          const pointA = this._pt(pt1), pointB = this._pt(pt2);
+          if (!pointA || !pointB) return null;
+          const dx = pointB.x - pointA.x, dy = pointB.y - pointA.y, len = Math.hypot(dx, dy);
+          if (len === 0) return null;
+          const count = this._ada(opts.count) ? opts.count : 1;
+          const size = this._ada(opts.size) ? opts.size : 10;
+          const spacing = this._ada(opts.spacing) ? opts.spacing : 4;
+          const mx = (pointA.x + pointB.x) / 2, my = (pointA.y + pointB.y) / 2;
+          const ux = dx / len, uy = dy / len, nx = -uy, ny = ux, halfSize = size / 2;
+          const group = this._el('g');
+          let d = "";
+          for (let i = 0; i < count; i++) {
+            const offset = (i - (count - 1) / 2) * spacing;
+            const cx = mx + offset * ux, cy = my + offset * uy;
+            d += `M ${cx - halfSize * nx} ${cy - halfSize * ny} L ${cx + halfSize * nx} ${cy + halfSize * ny} `;
+          }
+          const path = this._el('path', { d: d.trim() });
+          this._applyOptions(path, opts);
+          group.appendChild(path);
+          this._tambah(group, 'shapes');
+          return group;
+        }
+        buatPoligon(points, options = {}) {
+          if (!Array.isArray(points) || points.length === 0) return null;
+          const ptsString = points.map(p => { const t = this._pt(p); return `${t.x},${t.y}`; }).join(" ");
+          const polygon = this._el('polygon', { points: ptsString });
+          this._applyOptions(polygon, options);
+          this._tambah(polygon, 'shapes');
+          if (options.sideLabels && Array.isArray(options.sideLabels)) {
+            const group = this.buatGrup([polygon]);
+            for (let i = 0; i < points.length; i++) {
+              if (!options.sideLabels[i]) continue;
+              const p1 = this._pt(points[i]), p2 = this._pt(points[(i + 1) % points.length]);
+              const mx = (p1.x + p2.x) / 2, my = (p1.y + p2.y) / 2;
+              const angle = Math.atan2(p2.y - p1.y, p2.x - p1.x);
+              const offset = options.labelOffset || 15;
+              const text = this.buatTeks(mx - Math.sin(angle) * offset, my + Math.cos(angle) * offset, options.sideLabels[i], {
+                position: 'middle-center', fontSize: options.labelFontSize || '12px', fill: options.labelColor || options.stroke || 'black'
+              });
+              group.appendChild(text);
+            }
+            return group;
+          }
+          return polygon;
+        }
+        buatLabelSisi(p1, p2, teks, options = {}) {
+          const a = this._pt(p1), b = this._pt(p2);
+          if (!a || !b) return null;
+          const dx = b.x - a.x, dy = b.y - a.y, panjang = Math.hypot(dx, dy);
+          if (panjang === 0) return null;
+          const { jarak, sisi, pusat, skala, desimal, satuan, ...opsiTeks } = options;
+          let isi = teks;
+          if (isi === undefined || isi === null || isi === 'auto') {
+            const nilai = panjang * (this._ada(skala) ? Number(skala) : 1);
+            isi = String(this._bulat(nilai, this._ada(desimal) ? desimal : 1)) + (satuan || '');
+          }
+          const jr = this._ada(jarak) ? Number(jarak) : 14;
+          const tandaKanan = this._yUp ? -1 : 1;
+          const tanda = (sisi === 'kiri') ? -tandaKanan : tandaKanan;
+          let nx = tanda * (-dy / panjang), ny = tanda * (dx / panjang);
+          const mx = (a.x + b.x) / 2, my = (a.y + b.y) / 2;
+          if (this._ada(pusat)) {
+            const c = this._pt(pusat);
+            if (c && (c.x - mx) * nx + (c.y - my) * ny > 0) { nx = -nx; ny = -ny; }
+          }
+          return this.buatTeks(mx + nx * jr, my + ny * jr, String(isi), { position: 'middle-center', ...opsiTeks });
+        }
+        buatLabelSisiPoligon(titik, daftarTeks, options = {}) {
+          if (!Array.isArray(titik) || titik.length < 3) return null;
+          const p = titik.map(t => this._pt(t));
+          const pusat = this._ada(options.pusat) ? options.pusat : [
+            p.reduce((j, t) => j + t.x, 0) / p.length,
+            p.reduce((j, t) => j + t.y, 0) / p.length
+          ];
+          const hasil = [];
+          for (let i = 0; i < p.length; i++) {
+            const teks = Array.isArray(daftarTeks) ? daftarTeks[i] : undefined;
+            if (teks === null || teks === false) continue;
+            const el = this.buatLabelSisi(p[i], p[(i + 1) % p.length], teks, { ...options, pusat });
+            if (el) hasil.push(el);
+          }
+          return hasil;
+        }
+        buatPolyline(points, options = {}) {
+          if (!Array.isArray(points) || points.length === 0) return null;
+          const ptsString = points.map(p => { const t = this._pt(p); return `${t.x},${t.y}`; }).join(" ");
+          const polyline = this._el('polyline', { points: ptsString, fill: 'none' });
+          this._applyOptions(polyline, options);
+          if (options.panah === true) {
+            const warna = options.stroke || this.svg.getAttribute('stroke') || 'black';
+            polyline.setAttribute('marker-end', `url(#${this._getMarker(warna)})`);
+          }
+          this._tambah(polyline, 'shapes');
+          return polyline;
+        }
+        _tigaTitik(a, b, c, d, e, f, g) {
+          if (typeof a === 'number' || typeof a === 'string') return { titik: [[a, b], [c, d], [e, f]], options: g || {} };
+          return { titik: [a, b, c], options: d || {} };
+        }
+        buatSegitiga(a, b, c, d, e, f, g) {
+          const { titik, options } = this._tigaTitik(a, b, c, d, e, f, g);
+          const p = titik.map(t => this._pt(t));
+          return this.buatPoligon(p.map(t => [t.x, t.y]), options);
+        }
+        hitungLingkaranLuar(p1, p2, p3) {
+          const A = this._pt(p1), B = this._pt(p2), C = this._pt(p3);
+          if (!A || !B || !C) return null;
+          const bx = B.x - A.x, by = B.y - A.y, cx = C.x - A.x, cy = C.y - A.y;
+          const d = 2 * (bx * cy - by * cx);
+          if (Math.abs(d) <= 1e-9) return null;
+          const b2 = bx * bx + by * by, c2 = cx * cx + cy * cy;
+          const ux = (cy * b2 - by * c2) / d, uy = (bx * c2 - cx * b2) / d;
+          return { pusat: [A.x + ux, A.y + uy], r: Math.hypot(ux, uy) };
+        }
+        hitungLingkaranDalam(p1, p2, p3) {
+          const A = this._pt(p1), B = this._pt(p2), C = this._pt(p3);
+          if (!A || !B || !C) return null;
+          const a = Math.hypot(B.x - C.x, B.y - C.y), b = Math.hypot(C.x - A.x, C.y - A.y), c = Math.hypot(A.x - B.x, A.y - B.y);
+          const keliling = a + b + c;
+          const luasDua = Math.abs((B.x - A.x) * (C.y - A.y) - (B.y - A.y) * (C.x - A.x));
+          return { pusat: [(a * A.x + b * B.x + c * C.x) / keliling, (a * A.y + b * B.y + c * C.y) / keliling], r: luasDua / keliling };
+        }
+        _lingkaranSegitiga(L, options) {
+          if (!L) return null;
+          const lingkaran = this.buatLingkaran(L.pusat[0], L.pusat[1], L.r, options);
+          if (options.titikPusat === true && lingkaran) {
+            this.buatTitik(L.pusat, { size: 3, color: options.stroke || 'black', label: options.labelPusat });
+          }
+          return lingkaran;
+        }
+        buatLingkaranLuar(p1, p2, p3, options = {}) {
+          return this._lingkaranSegitiga(this.hitungLingkaranLuar(p1, p2, p3), options);
+        }
+        buatLingkaranDalam(p1, p2, p3, options = {}) {
+          return this._lingkaranSegitiga(this.hitungLingkaranDalam(p1, p2, p3), options);
+        }
+        _bacaPusat(args, jumlah) {
+          const a = args[0];
+          if (typeof a === 'number' || typeof a === 'string') {
+            return { cx: a, cy: args[1], nilai: args.slice(2, 2 + jumlah), options: args[2 + jumlah] || {} };
+          }
+          const p = this._pt(a);
+          if (!p) return null;
+          return { cx: p.x, cy: p.y, nilai: args.slice(1, 1 + jumlah), options: args[1 + jumlah] || {} };
+        }
+        buatPersegiPanjang(...args) {
+          const arg = this._bacaPusat(args, 2);
+          if (!arg) return null;
+          let x = Number(arg.cx), y = Number(arg.cy), [width, height] = arg.nilai.map(Number);
+          const rect = this._el('rect', { x, y, width, height });
+          this._applyOptions(rect, arg.options);
+          this._tambah(rect, 'shapes');
+          return rect;
+        }
+        buatPersegi(...args) {
+          const arg = this._bacaPusat(args, 1);
+          if (!arg) return null;
+          const [sisi] = arg.nilai;
+          return this.buatPersegiPanjang(arg.cx, arg.cy, sisi, sisi, arg.options);
+        }
+        buatLingkaran(a, b, c, d) {
+          let cx, cy, r, options;
+          if (typeof a === 'number' || typeof a === 'string') {
+            cx = a; cy = b; r = c; options = d || {};
+          } else {
+            const p = this._pt(a);
+            if (!p) return null;
+            cx = p.x; cy = p.y; r = b; options = c || {};
+          }
+          const circle = this._el('circle', { cx: Number(cx), cy: Number(cy), r: Number(r) });
+          this._applyOptions(circle, options);
+          this._tambah(circle, 'shapes');
+          return circle;
+        }
+        buatElips(...args) {
+          const arg = this._bacaPusat(args, 2);
+          if (!arg) return null;
+          let cx = Number(arg.cx), cy = Number(arg.cy), [rx, ry] = arg.nilai.map(Number);
+          const ellipse = this._el('ellipse', { cx, cy, rx, ry });
+          this._applyOptions(ellipse, arg.options);
+          this._tambah(ellipse, 'shapes');
+          return ellipse;
+        }
+        _polarToCartesian(centerX, centerY, radius, angleInDegrees) {
+          const rad = angleInDegrees * Math.PI / 180.0;
+          return { x: centerX + (radius * Math.cos(rad)), y: centerY + (radius * Math.sin(rad)) };
+        }
+        _komponenBusur(cx, cy, r, startAngle, endAngle, sweep = 1) {
+          sweep = (sweep === 0 || sweep === false || sweep === 'ccw') ? 0 : 1;
+          const selisih = (sweep === 1) ? (endAngle - startAngle) : (startAngle - endAngle);
+          const start = this._polarToCartesian(cx, cy, r, startAngle);
+          if (Math.abs(selisih) >= 360) {
+            const tengah = this._polarToCartesian(cx, cy, r, startAngle + 180);
+            return { penuh: true, sweep, start, tengah, besar: 0 };
+          }
+          const span = ((selisih % 360) + 360) % 360;
+          const end = this._polarToCartesian(cx, cy, r, endAngle);
+          return { penuh: false, sweep, start, end, span, besar: span > 180 ? 1 : 0 };
+        }
+        buatBusur(...args) {
+          const arg = this._bacaPusat(args, 3);
+          if (!arg) return null;
+          let cx = Number(arg.cx), cy = Number(arg.cy), [r, startAngle, endAngle] = arg.nilai.map(Number);
+          const options = { ...arg.options };
+          const k = this._komponenBusur(cx, cy, r, startAngle, endAngle, options.sweep);
+          const s = k.start;
+          const dPath = k.penuh
+            ? ["M", s.x, s.y, "A", r, r, 0, 0, k.sweep, k.tengah.x, k.tengah.y, "A", r, r, 0, 0, k.sweep, s.x, s.y].join(" ")
+            : ["M", s.x, s.y, "A", r, r, 0, k.besar, k.sweep, k.end.x, k.end.y].join(" ");
+          const path = this._el('path', { d: dPath, fill: 'none' });
+          this._applyOptions(path, options);
+          this._tambah(path, 'shapes');
+          return path;
+        }
+        _bentukBusur(nama, jenis, cx, cy, r, startAngle, endAngle, options = {}) {
+          cx = Number(cx); cy = Number(cy); r = Number(r);
+          startAngle = Number(startAngle); endAngle = Number(endAngle);
+          const k = this._komponenBusur(cx, cy, r, startAngle, endAngle, options.sweep);
+          const s = k.start;
+          let d;
+          if (k.penuh) {
+            d = ["M", s.x, s.y, "A", r, r, 0, 0, k.sweep, k.tengah.x, k.tengah.y, "A", r, r, 0, 0, k.sweep, s.x, s.y, "Z"].join(" ");
+          } else if (jenis === 'juring') {
+            d = ["M", cx, cy, "L", s.x, s.y, "A", r, r, 0, k.besar, k.sweep, k.end.x, k.end.y, "Z"].join(" ");
+          } else {
+            d = ["M", s.x, s.y, "A", r, r, 0, k.besar, k.sweep, k.end.x, k.end.y, "Z"].join(" ");
+          }
+          const path = this._el('path', { d, fill: 'none' });
+          this._applyOptions(path, options);
+          this._tambah(path, 'shapes');
+          return path;
+        }
+        buatJuring(...args) {
+          const arg = this._bacaPusat(args, 3);
+          if (!arg) return null;
+          const [r, startAngle, endAngle] = arg.nilai;
+          return this._bentukBusur('buatJuring', 'juring', arg.cx, arg.cy, r, startAngle, endAngle, arg.options);
+        }
+        buatTembereng(...args) {
+          const arg = this._bacaPusat(args, 3);
+          if (!arg) return null;
+          const [r, startAngle, endAngle] = arg.nilai;
+          return this._bentukBusur('buatTembereng', 'tembereng', arg.cx, arg.cy, r, startAngle, endAngle, arg.options);
+        }
+        buatSetengahLingkaran(a, b, c, d, e) {
+          const arg = this._duaTitik(a, b, c, d, e);
+          if (!arg) return null;
+          let { x1, y1, x2, y2, options } = arg;
+          x1 = Number(x1); y1 = Number(y1); x2 = Number(x2); y2 = Number(y2);
+          const diameter = Math.hypot(x2 - x1, y2 - y1);
+          const sisi = this._ada(options.sisi) ? options.sisi : 'kiri';
+          const sweepKiri = this._yUp ? 0 : 1;
+          const sweep = (sisi === 'kiri') ? sweepKiri : 1 - sweepKiri;
+          const r = diameter / 2;
+          const tutup = options.tutup !== false;
+          const dPath = `M ${x1} ${y1} A ${r} ${r} 0 0 ${sweep} ${x2} ${y2}` + (tutup ? ' Z' : '');
+          const path = this._el('path', { d: dPath, fill: 'none' });
+          this._applyOptions(path, options);
+          this._tambah(path, 'shapes');
+          return path;
+        }
+        hitungSudut(p1, vertex, p3, options = {}) {
+          const a = this._pt(p1), v = this._pt(vertex), c = this._pt(p3);
+          if (!a || !v || !c) return null;
+          const a1 = Math.atan2(a.y - v.y, a.x - v.x), a2 = Math.atan2(c.y - v.y, c.x - v.x);
+          const selisih = Math.abs(this._normalSudut(a2 - a1));
+          let derajat = selisih * 180 / Math.PI;
+          if (options.refleks === true && selisih > 1e-9) derajat = 360 - derajat;
+          return this._bulat(derajat, this._ada(options.desimal) ? options.desimal : 2);
+        }
+        buatSudut(p1, p2, p3, options = {}) {
+          options = this._normalizeOptions(options, GEOSVG_ALIAS.sudut);
+          const a = this._pt(p1), v = this._pt(p2), c = this._pt(p3);
+          if (!a || !v || !c) return null;
+          const r = options.radius || 30;
+          const a1 = Math.atan2(a.y - v.y, a.x - v.x), a2 = Math.atan2(c.y - v.y, c.x - v.x);
+          let diff = this._normalSudut(a2 - a1);
+          if (options.refleks === true && Math.abs(diff) > 1e-9) {
+            diff = diff > 0 ? diff - 2 * Math.PI : diff + 2 * Math.PI;
+          }
+          const sweepFlag = diff > 0 ? 1 : 0;
+          const besarFlag = Math.abs(diff) > Math.PI ? 1 : 0;
+          const xA = v.x + r * Math.cos(a1), yA = v.y + r * Math.sin(a1);
+          const xB = v.x + r * Math.cos(a2), yB = v.y + r * Math.sin(a2);
+          const group = this._el('g');
+          const d = ["M", v.x, v.y, "L", xA, yA, "A", r, r, 0, besarFlag, sweepFlag, xB, yB, "Z"].join(" ");
+          const path = this._el('path', { d }, group);
+          const pathOptions = { ...options };
+          if (typeof pathOptions.fill === 'undefined') pathOptions.fill = "rgba(0, 0, 0, 0.1)";
+          this._applyOptions(path, pathOptions);
+          this._tambahLabelSudut(group, v.x, v.y, a1, diff, r, options);
+          this._tambah(group, 'shapes');
+          return group;
+        }
+        buatSiku(p1, p2, p3, options = {}) {
+          let pt1, pt2, pt3, opts;
+          if (typeof p1 === 'number' && typeof p2 === 'number') {
+            pt1 = [p1, p2]; pt2 = [arguments[2], arguments[3]]; pt3 = [arguments[4], arguments[5]]; opts = arguments[6] || {};
+          } else {
+            pt1 = p1; pt2 = p2; pt3 = p3; opts = options || {};
+          }
+          opts = this._normalizeOptions(opts, GEOSVG_ALIAS.siku);
+          const pA = this._pt(pt1), pV = this._pt(pt2), pB = this._pt(pt3);
+          if (!pA || !pV || !pB) return null;
+          const dx1 = pA.x - pV.x, dy1 = pA.y - pV.y, dx2 = pB.x - pV.x, dy2 = pB.y - pV.y;
+          const len1 = Math.hypot(dx1, dy1), len2 = Math.hypot(dx2, dy2);
+          const size = opts.size || 15;
+          const u1x = dx1 / len1, u1y = dy1 / len1, u2x = dx2 / len2, u2y = dy2 / len2;
+          const xA = pV.x + size * u1x, yA = pV.y + size * u1y;
+          const xC = pV.x + size * u2x, yC = pV.y + size * u2y;
+          const xB = xA + size * u2x, yB = yA + size * u2y;
+          const group = this._el('g');
+          const d = (opts.fill && opts.fill !== 'none')
+            ? `M ${pV.x} ${pV.y} L ${xA} ${yA} L ${xB} ${yB} L ${xC} ${yC} Z`
+            : `M ${xA} ${yA} L ${xB} ${yB} L ${xC} ${yC}`;
+          const path = this._el('path', { d }, group);
+          const pathOptions = { ...opts };
+          if (typeof pathOptions.fill === 'undefined') pathOptions.fill = "none";
+          this._applyOptions(path, pathOptions);
+          if (opts.dot) {
+            this._el('circle', {
+              cx: pV.x + (size / 2) * (u1x + u2x), cy: pV.y + (size / 2) * (u1y + u2y),
+              r: opts.dotRadius || 1.5, fill: pathOptions.stroke || "black", stroke: 'none'
+            }, group);
+          }
+          const a1 = Math.atan2(dy1, dx1), a2 = Math.atan2(dy2, dx2);
+          this._tambahLabelSudut(group, pV.x, pV.y, a1, this._normalSudut(a2 - a1), size, opts);
+          this._tambah(group, 'shapes');
+          return group;
+        }
+        buatTeks(x, y, textContent, options = {}) {
+          if (Array.isArray(x)) { options = textContent || {}; textContent = y; y = x[1]; x = x[0]; }
+          options = this._normalizeOptions(options, GEOSVG_ALIAS.teks);
+          const text = this._el('text', { x, y, fill: options.fill || 'black' });
+          text.textContent = textContent;
+          if (options.fontSize) text.setAttribute("font-size", options.fontSize);
+          if (options.fontFamily) text.setAttribute("font-family", options.fontFamily);
+          if (options.bold || options.fontWeight) text.setAttribute("font-weight", options.bold ? 'bold' : options.fontWeight);
+          this._applyTextAlignment(text, options.position);
+          this._applyOptions(text, { ...options, stroke: options.stroke || 'none' });
+          this._tegakkanTeks(text);
+          this._tambah(text, 'labels');
+          return text;
+        }
+        buatLatex(x, y, latexString, options = {}) {
+          if (Array.isArray(x)) { options = latexString || {}; latexString = y; y = x[1]; x = x[0]; }
+          latexString = String(latexString);
+          const foreignObject = this._el("foreignObject", { x, y, width: options.width || 500, height: options.height || 200 });
+          foreignObject.style.overflow = "visible";
+          const div = document.createElement("div");
+          div.style.display = "inline-block";
+          div.style.whiteSpace = "nowrap";
+          div.style.color = options.color || "black";
+          if (options.fontSize) div.style.fontSize = options.fontSize;
+          const isDisplay = options.displayMode || false;
+          div.textContent = isDisplay ? `\\[ ${latexString} \\]` : `\\( ${latexString} \\)`;
+          foreignObject.appendChild(div);
+          this._tambah(foreignObject, 'labels');
+          const props = this._getAlignmentProps(options.position || 'top-right');
+          const adjustPosition = () => {
+            const w = div.scrollWidth + 2, h = div.scrollHeight + 2;
+            foreignObject.setAttribute("width", w);
+            foreignObject.setAttribute("height", h);
+            foreignObject.setAttribute("x", x - (w * props.alignX));
+            if (this._yUp) {
+              const fy = y - h * (1 - props.alignY);
+              foreignObject.setAttribute("y", fy);
+              foreignObject.setAttribute("transform", `translate(0 ${2 * fy + h}) scale(1 -1)`);
+            } else {
+              foreignObject.setAttribute("y", y - (h * props.alignY));
+            }
+          };
+          const render = () => {
+            if (window.katex) {
+              katex.render(latexString, div, { displayMode: isDisplay, throwOnError: false });
+              return Promise.resolve();
+            }
+            return Promise.resolve();
+          };
+          foreignObject.ready = Promise.resolve().then(render).then(adjustPosition).catch(adjustPosition);
+          return foreignObject;
+        }
+        buatPolaArsir(id, tipe = 'miring', options = {}) {
+          options = this._normalizeOptions(options, GEOSVG_ALIAS.polaArsir);
+          const lama = Array.from(this.defs.children).find(el => el.id === id);
+          if (lama) lama.remove();
+          const size = options.size || 10;
+          const stroke = options.stroke || "black";
+          const strokeWidth = this._ada(options.strokeWidth) ? options.strokeWidth : 1;
+          const bentuk = {
+            miring: `M 0,${size} l ${size},-${size} M -${size / 4},${size / 4} l ${size / 2},-${size / 2} M ${size * 3 / 4},${size * 5 / 4} l ${size / 2},-${size / 2}`,
+            vertikal: `M ${size / 2},0 l 0,${size}`,
+            horizontal: `M 0,${size / 2} l ${size},0`,
+            silang: `M 0,0 l ${size},${size} M 0,${size} l ${size},-${size}`
+          };
+          const pattern = this._el('pattern', {
+            id, patternUnits: 'userSpaceOnUse', width: size, height: size,
+            patternTransform: this._yUp ? `matrix(1 0 0 -1 0 ${size})` : undefined
+          }, this.defs);
+          this._el('path', { d: bentuk[tipe] || bentuk.miring, stroke, 'stroke-width': strokeWidth, fill: 'none' }, pattern);
+          return pattern;
+        }
+        buatVektor(a, b, c, d, e) {
+          const arg = this._duaTitik(a, b, c, d, e);
+          if (!arg) return null;
+          const { x1, y1, x2, y2, options } = arg;
+          const line = this.buatSegmen(x1, y1, x2, y2, options);
+          if (!line) return null;
+          const color = options.stroke || 'black';
+          line.setAttribute("marker-end", `url(#${this._getMarker(color)})`);
+          return line;
+        }
+        buatFungsi(f, xMin, xMax, options = {}) {
+          xMin = Number(xMin); xMax = Number(xMax);
+          const langkah = this._ada(options.langkah) ? Math.floor(Number(options.langkah)) : 200;
+          const dasar = this._ada(options.skala) ? Number(options.skala) : 1;
+          const sx = this._ada(options.skalaX) ? Number(options.skalaX) : dasar;
+          const sy = this._ada(options.skalaY) ? Number(options.skalaY) : dasar;
+          const area = this._getAreaGambar();
+          const batasBawah = area.minY - area.h, batasAtas = area.minY + 2 * area.h;
+          const maksLompatan = this._ada(options.maksLompatan) ? Number(options.maksLompatan) : area.h;
+          const arah = this._yUp ? 1 : -1;
+          let d = '', sebelumnya = null;
+          for (let i = 0; i <= langkah; i++) {
+            const x = xMin + i * (xMax - xMin) / langkah;
+            let y; try { y = f(x); } catch (e) { y = NaN; }
+            const ys = arah * y * sy;
+            const sah = typeof y === 'number' && Number.isFinite(ys) && ys >= batasBawah && ys <= batasAtas;
+            if (!sah) { sebelumnya = null; continue; }
+            const putus = sebelumnya === null || Math.abs(ys - sebelumnya) > maksLompatan;
+            d += `${putus ? 'M' : 'L'}${this._bulat(x * sx)} ${this._bulat(ys)}`;
+            sebelumnya = ys;
+          }
+          const path = this._el('path', { d, fill: 'none' });
+          this._applyOptions(path, options);
+          this._tambah(path, 'shapes');
+          return path;
+        }
+        buatPoligonBeraturan(...args) {
+          const arg = this._bacaPusat(args, 2);
+          if (!arg) return null;
+          let cx = Number(arg.cx), cy = Number(arg.cy), [radius, sides] = arg.nilai.map(Number);
+          sides = Math.floor(sides);
+          const options = arg.options;
+          const bawaan = this._yUp ? 90 : -90;
+          const mulaiDerajat = (options.startAngle !== undefined) ? options.startAngle : bawaan;
+          const offset = mulaiDerajat * Math.PI / 180;
+          const points = [];
+          for (let i = 0; i < sides; i++) {
+            const angle = offset + (i * 2 * Math.PI / sides);
+            points.push({ x: cx + radius * Math.cos(angle), y: cy + radius * Math.sin(angle) });
+          }
+          return this.buatPoligon(points, options);
+        }
+        buatKurvaBezier(points, options = {}) {
+          options = { ...options };
+          const p = points.map(t => this._pt(t));
+          let d = `M ${p[0].x},${p[0].y} `;
+          if (p.length === 3) d += `Q ${p[1].x},${p[1].y} ${p[2].x},${p[2].y}`;
+          else if (p.length >= 4) d += `C ${p[1].x},${p[1].y} ${p[2].x},${p[2].y} ${p[3].x},${p[3].y}`;
+          else d += `L ${p[1].x},${p[1].y}`;
+          const path = this._el('path', { d });
+          if (!options.fill) options.fill = 'none';
+          this._applyOptions(path, options);
+          this._tambah(path, 'shapes');
+          return path;
+        }
+        buatKurvaHalus(points, options = {}) {
+          options = { ...options };
+          const p = points.map(t => this._pt(t));
+          if (p.length === 2) return this.buatSegmen(p[0].x, p[0].y, p[1].x, p[1].y, options);
+          const tension = this._ada(options.tension) ? options.tension : 0.2;
+          let d = `M ${p[0].x},${p[0].y} `;
+          for (let i = 0; i < p.length - 1; i++) {
+            const p0 = i === 0 ? p[0] : p[i - 1], p1 = p[i], p2 = p[i + 1], p3 = i + 2 < p.length ? p[i + 2] : p2;
+            const cp1x = p1.x + (p2.x - p0.x) * tension, cp1y = p1.y + (p2.y - p0.y) * tension;
+            const cp2x = p2.x - (p3.x - p1.x) * tension, cp2y = p2.y - (p3.y - p1.y) * tension;
+            d += `C ${this._bulat(cp1x)},${this._bulat(cp1y)} ${this._bulat(cp2x)},${this._bulat(cp2y)} ${p2.x},${p2.y} `;
+          }
+          const path = this._el('path', { d: d.trim() });
+          if (typeof options.fill === 'undefined') options.fill = 'none';
+          this._applyOptions(path, options);
+          this._tambah(path, 'shapes');
+          return path;
+        }
+        _validasiStep(step) { return Number(step) > 0 ? Number(step) : 20; }
+        _cekJumlah() { }
+        _areaTetap() {
+          const vb = this.svg.getAttribute("viewBox");
+          if (vb) {
+            const p = vb.trim().split(/[\s,]+/).map(Number);
+            if (p.length === 4) return { minX: p[0], minY: p[1], w: p[2], h: p[3] };
+          }
+          const w = this._ukuranAngka(this.svg.getAttribute("width"));
+          const h = this._ukuranAngka(this.svg.getAttribute("height"));
+          if (w > 0 && h > 0) return { minX: 0, minY: 0, w, h };
+          return null;
+        }
+        _getAreaGambar() {
+          const vb = this.svg.viewBox && this.svg.viewBox.baseVal;
+          if (vb && vb.width > 0 && vb.height > 0) return { minX: vb.x, minY: vb.y, w: vb.width, h: vb.height };
+          let w = this._ukuranAngka(this.svg.getAttribute("width")) || 320;
+          let h = this._ukuranAngka(this.svg.getAttribute("height")) || 220;
+          return { minX: 0, minY: 0, w, h };
+        }
+        buatGrid(stepX, stepY, options = {}) {
+          if (!stepY) stepY = stepX;
+          stepX = this._validasiStep(stepX); stepY = this._validasiStep(stepY);
+          const { minX, minY, w, h } = this._getAreaGambar();
+          const awalX = Math.floor(minX / stepX) * stepX, jumlahX = Math.floor((minX + w - awalX) / stepX + 1e-9) + 1;
+          const awalY = Math.floor(minY / stepY) * stepY, jumlahY = Math.floor((minY + h - awalY) / stepY + 1e-9) + 1;
+          const bagian = [];
+          for (let i = 0; i < jumlahX; i++) bagian.push(`M${this._bulat(awalX + i * stepX)} ${this._bulat(minY)}v${this._bulat(h)}`);
+          for (let i = 0; i < jumlahY; i++) bagian.push(`M${this._bulat(minX)} ${this._bulat(awalY + i * stepY)}h${this._bulat(w)}`);
+          const gridOptions = { stroke: '#e2e8f0', strokeWidth: 1, ...options };
+          const path = this._el('path', { d: bagian.join(''), fill: 'none' });
+          this._applyOptions(path, gridOptions);
+          this._tambah(path, 'grid');
+          return path;
+        }
+        buatSumbuKoordinat(xMin, xMax, yMin, yMax, step = 10, options = {}) {
+          step = this._validasiStep(step);
+          const naik = this._yUp, arahY = naik ? -1 : 1, group = this._el('g');
+          group.appendChild(this.buatVektor(xMin, 0, xMax, 0, { stroke: 'black', strokeWidth: 1.5, ...options }));
+          group.appendChild(naik
+            ? this.buatVektor(0, yMin, 0, yMax, { stroke: 'black', strokeWidth: 1.5, ...options })
+            : this.buatVektor(0, yMax, 0, yMin, { stroke: 'black', strokeWidth: 1.5, ...options }));
+          const tickSize = options.tickSize || 4, skipZero = options.skipZero !== false;
+          const drawTicks = (start, end, axis) => {
+            const jumlah = Math.floor((end - start) / step + 1e-9) + 1;
+            for (let i = 0; i < jumlah; i++) {
+              const val = start + i * step, bersih = parseFloat(val.toPrecision(12));
+              if (Math.abs(val) < 0.0001) {
+                if (!skipZero) group.appendChild(this.buatTeks(4, arahY * 12, "0", { fontSize: '10px', ...options }));
+                continue;
+              }
+              if (axis === 'x') {
+                group.appendChild(this._el('line', { x1: val, y1: -tickSize, x2: val, y2: tickSize, stroke: 'black', 'stroke-width': 1 }));
+                group.appendChild(this.buatTeks(val, arahY * (tickSize + 12), bersih.toString(), { position: 'top-center', fontSize: '10px', ...options }));
+              } else {
+                group.appendChild(this._el('line', { x1: -tickSize, y1: val, x2: tickSize, y2: val, stroke: 'black', 'stroke-width': 1 }));
+                group.appendChild(naik
+                  ? this.buatTeks(-tickSize - 4, val, bersih.toString(), { position: 'middle-left', fontSize: '10px', ...options })
+                  : this.buatTeks(-tickSize - 4, val, (-bersih).toString(), { position: 'middle-right', fontSize: '10px', ...options }));
+              }
+            }
+          };
+          drawTicks(Math.ceil(xMin / step) * step, Math.floor(xMax / step) * step, 'x');
+          drawTicks(Math.ceil(yMin / step) * step, Math.floor(yMax / step) * step, 'y');
+          this._tambah(group, 'shapes');
+          return group;
+        }
+        buatDimensi(p1, p2, offset, label, options = {}) {
+          const pt1 = this._pt(p1), pt2 = this._pt(p2);
+          if (!pt1 || !pt2) return null;
+          const dx = pt2.x - pt1.x, dy = pt2.y - pt1.y, len = Math.hypot(dx, dy);
+          const nx = -dy / len, ny = dx / len;
+          const op1x = pt1.x + nx * offset, op1y = pt1.y + ny * offset;
+          const op2x = pt2.x + nx * offset, op2y = pt2.y + ny * offset;
+          const group = this.buatGrup();
+          const strokeOpt = { stroke: options.stroke || '#475569', strokeWidth: 1, ...options };
+          group.appendChild(this.buatSegmen(pt1.x, pt1.y, op1x, op1y, strokeOpt));
+          group.appendChild(this.buatSegmen(pt2.x, pt2.y, op2x, op2y, strokeOpt));
+          const dimLine = this.buatSegmen(op1x, op1y, op2x, op2y, strokeOpt);
+          dimLine.setAttribute("marker-start", `url(#${this._getMarker(strokeOpt.stroke, true)})`);
+          dimLine.setAttribute("marker-end", `url(#${this._getMarker(strokeOpt.stroke)})`);
+          group.appendChild(dimLine);
+          if (label) {
+            const midX = (op1x + op2x) / 2 + nx * 12, midY = (op1y + op2y) / 2 + ny * 12;
+            group.appendChild(this.buatTeks(midX, midY, label, { position: 'middle-center', fill: strokeOpt.stroke, fontSize: options.fontSize || '12px' }));
+          }
+          return group;
+        }
+        hapus(element) { if (element && element.parentNode) element.parentNode.removeChild(element); }
+        pindahKeAtas(element) { if (element && element.parentNode) element.parentNode.appendChild(element); }
+        pindahKeBawah(element) { if (element && element.parentNode) element.parentNode.insertBefore(element, element.parentNode.firstChild); }
+        buatGrup(elements = [], options = {}) {
+          const group = this._el("g");
+          this._applyOptions(group, options);
+          const daftar = Array.isArray(elements) ? elements : [elements];
+          daftar.filter(el => el instanceof Node).forEach(el => group.appendChild(el));
+          this._tambah(group, 'shapes');
+          return group;
+        }
+        keStringSVG() {
+          return '<?xml version="1.0" standalone="no"?>\r\n' + new XMLSerializer().serializeToString(this.svg);
+        }
+        _unduh(blob, namaFile) {
+          const url = URL.createObjectURL(blob);
+          const a = document.createElement("a");
+          a.href = url; a.download = namaFile;
+          document.body.appendChild(a); a.click(); document.body.removeChild(a);
+          setTimeout(() => URL.revokeObjectURL(url), 1000);
+        }
+        downloadSVG(filename = 'geometri.svg') {
+          if (!/\.svg$/i.test(filename)) filename += '.svg';
+          const blob = new Blob([this.keStringSVG()], { type: 'image/svg+xml;charset=utf-8' });
+          this._unduh(blob, filename);
+          return blob;
+        }
+        _ukuranEkspor() {
+          const rect = this.svg.getBoundingClientRect();
+          if (rect.width > 0 && rect.height > 0) return { w: rect.width, h: rect.height };
+          return { w: 320, h: 220 };
+        }
+        toPNGBlob(options = {}) {
+          return new Promise((resolve, reject) => {
+            const skala = this._ada(options.scale) ? Number(options.scale) : 2;
+            const { w, h } = this._ukuranEkspor();
+            const lebarPx = Math.max(1, Math.round(w * skala)), tinggiPx = Math.max(1, Math.round(h * skala));
+            let latar = (options.background !== undefined) ? options.background : this.svg.style.backgroundColor;
+            const klon = this.svg.cloneNode(true);
+            klon.setAttribute("width", w); klon.setAttribute("height", h);
+            if (options.tanpaLatex) klon.querySelectorAll('foreignObject').forEach(el => el.remove());
+            const teks = new XMLSerializer().serializeToString(klon);
+            const url = URL.createObjectURL(new Blob([teks], { type: "image/svg+xml;charset=utf-8" }));
+            const img = new Image();
+            img.onerror = () => { URL.revokeObjectURL(url); reject(new Error("Gagal merender PNG")); };
+            img.onload = () => {
+              const canvas = document.createElement("canvas");
+              canvas.width = lebarPx; canvas.height = tinggiPx;
+              const ctx = canvas.getContext("2d");
+              if (latar && latar !== 'transparent') { ctx.fillStyle = latar; ctx.fillRect(0, 0, lebarPx, tinggiPx); }
+              ctx.drawImage(img, 0, 0, lebarPx, tinggiPx);
+              URL.revokeObjectURL(url);
+              canvas.toBlob(blob => blob ? resolve(blob) : reject(new Error("Gagal membuat Blob")), "image/png");
+            };
+            img.src = url;
+          });
+        }
+        async downloadPNG(filename = 'geometri.png', skalaAtauOpsi = 2) {
+          if (!/\.png$/i.test(filename)) filename += '.png';
+          const opsi = (skalaAtauOpsi && typeof skalaAtauOpsi === 'object') ? skalaAtauOpsi : { scale: skalaAtauOpsi };
+          const blob = await this.toPNGBlob(opsi);
+          this._unduh(blob, filename);
+          return blob;
+        }
+        destroy() {
+          if (this._destroyed) return;
+          this._destroyed = true;
+          if (this.svg && this.svg.parentNode) this.svg.parentNode.removeChild(this.svg);
+          this._markers.clear();
+          this.svg.textContent = '';
+        }
+        clear() {
+          [...this.svg.children].forEach(child => {
+            if (child === this.defs || child.tagName === 'title' || child.tagName === 'desc') return;
+            if (Object.values(this._layers).includes(child)) child.textContent = '';
+            else child.remove();
+          });
+        }
+      }
+      return GeoSVG;
+    });
+  </script>
+
+  <!-- ===================================================================== -->
+  <!-- BASIS DATA DOKUMENTASI LENGKAP (~45 FUNGSI & SEMUA KATEGORI)          -->
+  <!-- ===================================================================== -->
+  <script>
+    const DOCS_DATA = [
+      // =====================================================================
+      // KATEGORI 0: MEMULAI & INSTALASI
+      // =====================================================================
+      {
+        id: "memulai",
+        judul: "0. Memulai & Instalasi",
+        deskripsi: "Panduan pengenalan, cara memasang GeoSVG.js di HTML maupun Node/Bundler, inisialisasi konstruktor kanvas, dan pemeriksaan dukungan lingkungan.",
+        halamanKhusus: [
+          {
+            id: "pengenalan",
+            nama: "Pengenalan & Instalasi",
+            kontenHTML: `
+              <span class="breadcrumb">Memulai & Instalasi</span>
+              <h1>Pengenalan & Instalasi GeoSVG.js</h1>
+              <p class="lead"><strong>GeoSVG.js</strong> adalah pustaka JavaScript murni (tanpa dependensi wajib) berbasis SVG untuk membuat ilustrasi geometri matematika, bangun datar, sudut, arsir, konstruksi garis, dan grafik fungsi menggunakan API berbahasa Indonesia yang bersih.</p>
+
+              <div class="info-callout">
+                <strong>💡 Fitur Utama GeoSVG.js:</strong>
+                <ul style="margin-left:1.25rem;margin-top:0.35rem;">
+                  <li>Mendukung koordinat layar standar maupun <strong>koordinat matematika (<code>yUp: true</code>)</strong> di mana sumbu $Y$ positif mengarah ke atas.</li>
+                  <li>Otomatis mengelola 3 lapisan kanvas: <code>grid</code> (bawah), <code>shapes</code> (tengah), dan <code>labels</code> (atas).</li>
+                  <li>Menyediakan fungsi hitung murni (<code>hitung...</code>) sekaligus fungsi gambar langsung (<code>buat...</code>).</li>
+                  <li>Mendukung ekspor langsung ke file <strong>SVG</strong> maupun gambar <strong>PNG</strong> resolusi tinggi.</li>
+                </ul>
+              </div>
+
+              <h2>1. Instalasi via Tag &lt;script&gt; (HTML Biasa)</h2>
+              <p>Cara paling cepat adalah menyimpan file <code>GeoSVG.js</code> di proyek Anda lalu memuatnya dengan tag <code>&lt;script&gt;</code>:</p>
+              <pre><code>&lt;!DOCTYPE html&gt;
+&lt;html lang="id"&gt;
+&lt;head&gt;
+  &lt;meta charset="UTF-8"&gt;
+  &lt;title&gt;Gambar Geometri&lt;/title&gt;
+  &lt;!-- Opsional: Muat KaTeX jika ingin menggunakan buatLatex() --&gt;
+  &lt;link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css"&gt;
+  &lt;script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"&gt;&lt;/script&gt;
+&lt;/head&gt;
+&lt;body&gt;
+  &lt;!-- 1. Siapkan wadah HTML --&gt;
+  &lt;div id="wadah-geometri"&gt;&lt;/div&gt;
+
+  &lt;!-- 2. Muat GeoSVG.js --&gt;
+  &lt;script src="GeoSVG.js"&gt;&lt;/script&gt;
+  &lt;script&gt;
+    // 3. Buat instance dan mulai menggambar
+    const geo = new GeoSVG('wadah-geometri', 400, 300, {
+      margin: 20,
+      background: '#f8fafc'
+    });
+
+    geo.buatGrid(25);
+    geo.buatSegitiga([60, 240], [340, 240], [200, 50], {
+      fill: '#dbeafe',
+      stroke: '#1d4ed8',
+      strokeWidth: 2
+    });
+  &lt;/script&gt;
+&lt;/body&gt;
+&lt;/html&gt;</code></pre>
+
+              <h2>2. Penggunaan di Node.js / Bundler (Vite, Webpack, Next.js)</h2>
+              <p><code>GeoSVG.js</code> menggunakan pembungkus UMD sehingga bisa diimpor dengan <code>require()</code> atau <code>import</code>. Karena membutuhkan DOM browser, gunakan <code>GeoSVG.didukung()</code> atau jalankan di dalam <code>useEffect</code> / <code>onMounted</code>:</p>
+              <pre><code>import GeoSVG from './GeoSVG.js';
+
+if (GeoSVG.didukung()) {
+  const geo = new GeoSVG(document.getElementById('kanvas'), 500, 400, {
+    yUp: true,
+    clearContainer: true
+  });
+}</code></pre>
+
+              <h2>3. Opsi Gaya Umum (Berlaku di Semua Fungsi Gambar)</h2>
+              <p>Hampir semua fungsi <code>buat...()</code> menerima parameter terakhir <code>options</code> yang mendukung atribut visual standar SVG berikut:</p>
+              <div class="table-wrap">
+                <table>
+                  <thead>
+                    <tr><th>Nama Opsi</th><th>Tipe</th><th>Contoh Nilai</th><th>Keterangan</th></tr>
+                  </thead>
+                  <tbody>
+                    <tr><td><code>stroke</code></td><td><code>string</code></td><td><code>'#2563eb'</code></td><td>Warna garis tepi elemen.</td></tr>
+                    <tr><td><code>strokeWidth</code></td><td><code>number</code></td><td><code>2</code></td><td>Ketebalan garis tepi dalam piksel.</td></tr>
+                    <tr><td><code>fill</code></td><td><code>string</code></td><td><code>'#dbeafe'</code> atau <code>'url(#arsir)'</code></td><td>Warna isi bangun datar (bawaan: <code>'none'</code>).</td></tr>
+                    <tr><td><code>dashed</code></td><td><code>boolean | number | string</code></td><td><code>true</code>, <code>5</code>, <code>'8 4 2 4'</code></td><td>Garis putus-putus otomatis tanpa perlu menghafal <code>stroke-dasharray</code>.</td></tr>
+                    <tr><td><code>opacity</code> / <code>fillOpacity</code> / <code>strokeOpacity</code></td><td><code>number</code></td><td><code>0.5</code></td><td>Tingkat transparansi (0 s.d. 1).</td></tr>
+                    <tr><td><code>id</code>, <code>className</code>, <code>dataset</code></td><td><code>string | Object</code></td><td><code>{ id: 'sisi-a' }</code></td><td>Atribut DOM HTML/SVG untuk seleksi CSS atau interaktivitas JS.</td></tr>
+                  </tbody>
+                </table>
+              </div>
+            `
+          }
+        ],
+        fungsi: [
+          {
+            id: "constructor",
+            nama: "new GeoSVG()",
+            ringkasan: "Inisialisasi kanvas SVG baru di dalam elemen wadah HTML beserta pengaturan ukuran, sistem koordinat, margin, dan aksesibilitas.",
+            sintaks: `new GeoSVG(containerId, width, height, options)\nnew GeoSVG(containerId, options)`,
+            parameter: [
+              { nama: "containerId", tipe: "string | Element", ket: "ID elemen HTML (tanpa '#') atau referensi elemen DOM secara langsung." },
+              { nama: "width", tipe: "number | string", ket: "Lebar kanvas SVG (mis. 400 atau '100%'). Dapat pula dimasukkan ke dalam objek options." },
+              { nama: "height", tipe: "number | string", ket: "Tinggi kanvas SVG (mis. 300 atau '100%')." },
+              { nama: "options", tipe: "Object", ket: "Opsi konfigurasi kanvas SVG." }
+            ],
+            opsi: [
+              { nama: "margin (alias: padding)", tipe: "number", bawaan: "0", ket: "Jarak ruang ekstra di sekeliling viewBox agar gambar di tepi tidak terpotong." },
+              { nama: "background (alias: backgroundColor)", tipe: "string", bawaan: "'transparent'", ket: "Warna latar belakang elemen SVG." },
+              { nama: "yUp", tipe: "boolean", bawaan: "false", ket: "Jika true, sumbu Y positif mengarah ke atas (standar kartesius matematika)." },
+              { nama: "viewBox", tipe: "string | boolean", bawaan: "undefined", ket: "Rentang koordinat internal SVG, misal '-150 -100 300 200'." },
+              { nama: "defaultStroke", tipe: "string", bawaan: "'black'", ket: "Warna garis bawaan untuk semua bentuk di dalam kanvas ini." },
+              { nama: "defaultStrokeWidth", tipe: "number", bawaan: "1", ket: "Ketebalan garis bawaan." },
+              { nama: "title (alias: judul)", tipe: "string", bawaan: "''", ket: "Elemen <title> untuk aksesibilitas pembaca layar." },
+              { nama: "description (alias: desc, deskripsi)", tipe: "string", bawaan: "''", ket: "Elemen <desc> untuk penjelasan gambar bagi pembaca layar." },
+              { nama: "dekoratif", tipe: "boolean", bawaan: "false", ket: "Jika true, menyematkan aria-hidden='true' pada SVG." },
+              { nama: "clearContainer", tipe: "boolean", bawaan: "false", ket: "Menghancurkan instance lama dan mengosongkan wadah sebelum menggambar." },
+              { nama: "strict", tipe: "boolean", bawaan: "false", ket: "Jika true, kesalahan parameter akan melempar Error (bukan sekadar peringatan konsol)." }
+            ],
+            contohKode: `const geo = new GeoSVG(container, 320, 220, {
+  margin: 15,
+  background: '#f8fafc',
+  defaultStroke: '#1e293b',
+  defaultStrokeWidth: 2,
+  title: 'Ilustrasi Kanvas GeoSVG',
+  clearContainer: true
+});
+
+geo.buatGrid(25);
+geo.buatPersegi([95, 45], 130, {
+  fill: '#dbeafe',
+  stroke: '#2563eb'
+});
+geo.buatLingkaran([160, 110], 65, {
+  fill: '#fef08a',
+  fillOpacity: 0.7,
+  stroke: '#ca8a04'
+});`
+          },
+          {
+            id: "didukung",
+            nama: "GeoSVG.didukung()",
+            ringkasan: "Method statis untuk memeriksa apakah lingkungan saat ini memiliki dukungan DOM SVG (browser) atau tidak (mis. saat Server-Side Rendering di Node.js).",
+            sintaks: `GeoSVG.didukung() // Mengembalikan boolean (true / false)`,
+            parameter: [
+              { nama: "(tidak ada)", tipe: "-", ket: "Method statis ini dipanggil langsung dari kelas GeoSVG tanpa parameter." }
+            ],
+            opsi: [],
+            contohKode: `const tersedia = GeoSVG.didukung();
+
+const geo = new GeoSVG(container, 320, 180, { background: '#f0fdf4' });
+geo.buatTeks(160, 90, 'GeoSVG.didukung() = ' + tersedia, {
+  position: 'tengah',
+  fontSize: '16px',
+  bold: true,
+  color: '#15803d'
+});
+return 'Status DOM Browser: ' + tersedia;`
+          }
+        ]
+      },
+
+      // =====================================================================
+      // KATEGORI 1: TITIK & PERPOTONGAN
+      // =====================================================================
+      {
+        id: "titik",
+        judul: "1. Titik & Perpotongan",
+        deskripsi: "Kumpulan fungsi untuk menggambar titik dengan berbagai simbol marker, mencari titik tengah, serta menghitung dan menggambar titik potong antar-garis maupun lingkaran.",
+        fungsi: [
+          {
+            id: "buatTitik",
+            nama: "buatTitik()",
+            ringkasan: "Menggambar sebuah titik pada koordinat (x, y) dengan pilihan bentuk simbol (lingkaran penuh, lingkaran kosong, berlian, tanda tambah) beserta label teksnya.",
+            sintaks: `geo.buatTitik(x, y, options)\ngeo.buatTitik([x, y], options)\ngeo.buatTitik({ x, y }, options)`,
+            parameter: [
+              { nama: "x / titik", tipe: "number | Array | Object", ket: "Koordinat X atau objek/array titik [x, y]." },
+              { nama: "y / options", tipe: "number | Object", ket: "Koordinat Y (atau objek options jika argumen pertama berupa titik)." },
+              { nama: "options", tipe: "Object", ket: "Pengaturan tampilan titik dan labelnya." }
+            ],
+            opsi: [
+              { nama: "marker", tipe: "string", bawaan: "'full-circle'", ket: "Pilihan bentuk: 'full-circle', 'empty-circle', 'diamond', atau 'plus'." },
+              { nama: "size", tipe: "number", bawaan: "4", ket: "Ukuran radius titik dalam piksel." },
+              { nama: "color", tipe: "string", bawaan: "'black'", ket: "Warna simbol titik." },
+              { nama: "label", tipe: "string", bawaan: "undefined", ket: "Teks nama titik yang ditampilkan di sebelahnya." },
+              { nama: "labelPosition", tipe: "string", bawaan: "'top-right'", ket: "Posisi label terhadap titik ('kiri atas', 'tengah atas', 'kanan atas', 'kiri bawah', dll.)." },
+              { nama: "labelDistance (alias: labelPadding, offset)", tipe: "number", bawaan: "size + 4", ket: "Jarak geser label dari pusat titik." },
+              { nama: "labelColor", tipe: "string", bawaan: "options.color", ket: "Warna khusus untuk teks label." },
+              { nama: "fontSize", tipe: "string", bawaan: "'12px'", ket: "Ukuran huruf label." },
+              { nama: "bold", tipe: "boolean", bawaan: "false", ket: "Menebalkan huruf label." },
+              { nama: "dx, dy", tipe: "number", bawaan: "0", ket: "Pergeseran halus tambahan untuk posisi label dalam piksel." }
+            ],
+            contohKode: `const geo = new GeoSVG(container, 320, 210);
+geo.buatGrid(25);
+
+geo.buatTitik([75, 65], {
+  marker: 'full-circle', color: '#2563eb', size: 5,
+  label: 'A (full-circle)', labelPosition: 'kanan atas', bold: true
+});
+geo.buatTitik([75, 145], {
+  marker: 'empty-circle', color: '#dc2626', size: 5,
+  label: 'B (empty-circle)', labelPosition: 'kanan tengah'
+});
+geo.buatTitik([215, 65], {
+  marker: 'diamond', color: '#16a34a', size: 6,
+  label: 'C (diamond)', labelPosition: 'tengah bawah'
+});
+geo.buatTitik([215, 145], {
+  marker: 'plus', color: '#9333ea', size: 6,
+  label: 'D (plus)', labelPosition: 'tengah bawah'
+});`
+          },
+          {
+            id: "hitungTitikTengah",
+            nama: "hitungTitikTengah()",
+            ringkasan: "Menghitung koordinat titik tengah [x, y] di antara dua titik p1 dan p2 tanpa menggambarnya ke kanvas.",
+            sintaks: `geo.hitungTitikTengah(p1, p2) // Mengembalikan [mx, my]`,
+            parameter: [
+              { nama: "p1", tipe: "Array | Object", ket: "Titik pertama [x1, y1] atau {x, y}." },
+              { nama: "p2", tipe: "Array | Object", ket: "Titik kedua [x2, y2] atau {x, y}." }
+            ],
+            opsi: [],
+            contohKode: `const geo = new GeoSVG(container, 320, 200);
+const A = [50, 150], B = [270, 50];
+const M = geo.hitungTitikTengah(A, B);
+
+geo.buatSegmen(A, B, { stroke: '#94a3b8', dashed: true });
+geo.buatTitik(A, { label: 'A', labelPosition: 'kiri bawah' });
+geo.buatTitik(B, { label: 'B', labelPosition: 'kanan atas' });
+geo.buatTitik(M, {
+  color: '#dc2626', size: 5,
+  label: 'M (' + M[0] + ', ' + M[1] + ')',
+  labelPosition: 'kanan bawah', bold: true
+});
+return 'Hasil hitungTitikTengah: [' + M.join(', ') + ']';`
+          },
+          {
+            id: "buatTitikTengah",
+            nama: "buatTitikTengah()",
+            ringkasan: "Menghitung sekaligus langsung menggambar titik tengah di antara titik p1 dan p2.",
+            sintaks: `geo.buatTitikTengah(p1, p2, options)`,
+            parameter: [
+              { nama: "p1", tipe: "Array | Object", ket: "Titik pertama [x1, y1]." },
+              { nama: "p2", tipe: "Array | Object", ket: "Titik kedua [x2, y2]." },
+              { nama: "options", tipe: "Object", ket: "Sama seperti opsi pada buatTitik()." }
+            ],
+            opsi: [
+              { nama: "(Semua opsi buatTitik)", tipe: "Object", bawaan: "-", ket: "Menerima marker, size, color, label, labelPosition, dll." }
+            ],
+            contohKode: `const geo = new GeoSVG(container, 320, 200);
+const P = [50, 100], Q = [270, 100];
+
+geo.buatSegmen(P, Q, { strokeWidth: 2 });
+geo.buatTitik(P, { label: 'P', labelPosition: 'kiri atas' });
+geo.buatTitik(Q, { label: 'Q', labelPosition: 'kanan atas' });
+
+geo.buatTitikTengah(P, Q, {
+  marker: 'diamond', color: '#2563eb', size: 6,
+  label: 'Tengah PQ', labelPosition: 'tengah bawah', bold: true
+});`
+          },
+          {
+            id: "hitungTitikPotong",
+            nama: "hitungTitikPotong()",
+            ringkasan: "Menghitung daftar koordinat titik potong [[x, y], ...] antara dua objek geometri (garis-garis, garis-lingkaran, atau lingkaran-lingkaran).",
+            sintaks: `geo.hitungTitikPotong(objA, objB, options)`,
+            parameter: [
+              { nama: "objA", tipe: "Array | Object", ket: "Garis berupa [p1, p2] atau lingkaran berupa { pusat: [x, y], r }." },
+              { nama: "objB", tipe: "Array | Object", ket: "Garis berupa [p1, p2] atau lingkaran berupa { pusat: [x, y], r }." },
+              { nama: "options", tipe: "Object", ket: "Opsi batasan perpotongan." }
+            ],
+            opsi: [
+              { nama: "segmen", tipe: "boolean", bawaan: "false", ket: "Jika true, perpotongan hanya dihitung jika berada di dalam ruas segmen garis (bukan perpanjangannya)." }
+            ],
+            contohKode: `const geo = new GeoSVG(container, 320, 210);
+const ling1 = { pusat: [130, 105], r: 65 };
+const ling2 = { pusat: [195, 105], r: 65 };
+
+geo.buatLingkaran(ling1.pusat, ling1.r, { stroke: '#2563eb' });
+geo.buatLingkaran(ling2.pusat, ling2.r, { stroke: '#16a34a' });
+
+const potong = geo.hitungTitikPotong(ling1, ling2);
+potong.forEach((pt, i) => {
+  geo.buatTitik(pt, { color: '#dc2626', label: 'P' + (i + 1), bold: true });
+});
+return 'Titik potong: ' + JSON.stringify(potong.map(p => p.map(n => Math.round(n))));`
+          },
+          {
+            id: "buatTitikPotong",
+            nama: "buatTitikPotong()",
+            ringkasan: "Menghitung dan langsung menggambar seluruh titik potong antara dua objek (garis maupun lingkaran).",
+            sintaks: `geo.buatTitikPotong(objA, objB, options)`,
+            parameter: [
+              { nama: "objA", tipe: "Array | Object", ket: "Garis [p1, p2] atau lingkaran { pusat: [x, y], r }." },
+              { nama: "objB", tipe: "Array | Object", ket: "Garis [p1, p2] atau lingkaran { pusat: [x, y], r }." },
+              { nama: "options", tipe: "Object", ket: "Opsi titik dan label." }
+            ],
+            opsi: [
+              { nama: "segmen", tipe: "boolean", bawaan: "false", ket: "Batasi perpotongan hanya di dalam ruas garis." },
+              { nama: "label", tipe: "string | Array<string>", bawaan: "undefined", ket: "Teks label tunggal atau array nama untuk tiap titik potong, misal ['A', 'B']." }
+            ],
+            contohKode: `const geo = new GeoSVG(container, 320, 210);
+const L = { pusat: [160, 105], r: 70 };
+const G = [[40, 155], [280, 55]];
+
+geo.buatLingkaran(L.pusat, L.r, { stroke: '#475569', fill: '#f8fafc' });
+geo.buatSegmen(G[0], G[1], { stroke: '#2563eb', strokeWidth: 2 });
+
+geo.buatTitikPotong(G, L, {
+  color: '#dc2626',
+  size: 5,
+  label: ['X', 'Y'],
+  labelPosition: 'tengah atas',
+  bold: true
+});`
+          },
+          {
+            id: "buatTitikPotongGaris",
+            nama: "buatTitikPotongGaris()",
+            ringkasan: "Menggambar titik potong dari dua garis lurus yang masing-masing ditentukan oleh sepasang titik (total 4 titik).",
+            sintaks: `geo.buatTitikPotongGaris(l1p1, l1p2, l2p1, l2p2, options)`,
+            parameter: [
+              { nama: "l1p1, l1p2", tipe: "Array | Object", ket: "Dua titik pembentuk garis pertama." },
+              { nama: "l2p1, l2p2", tipe: "Array | Object", ket: "Dua titik pembentuk garis kedua." },
+              { nama: "options", tipe: "Object", ket: "Opsi tampilan titik potong (sama seperti buatTitik)." }
+            ],
+            opsi: [
+              { nama: "(Semua opsi buatTitik)", tipe: "Object", bawaan: "-", ket: "Mengatur warna, ukuran, marker, dan label titik potong." }
+            ],
+            contohKode: `const geo = new GeoSVG(container, 320, 210);
+const A = [50, 40], B = [270, 170];
+const C = [50, 170], D = [270, 40];
+
+geo.buatSegmen(A, B, { stroke: '#64748b' });
+geo.buatSegmen(C, D, { stroke: '#64748b' });
+
+geo.buatTitikPotongGaris(A, B, C, D, {
+  color: '#e11d48',
+  size: 6,
+  label: 'T (Perpotongan)',
+  labelPosition: 'tengah atas',
+  bold: true
+});`
+          }
+        ]
+      },
+
+      // =====================================================================
+      // KATEGORI 2: GARIS, RUAS, & VEKTOR
+      // =====================================================================
+      {
+        id: "garis",
+        judul: "2. Garis, Ruas, & Vektor",
+        deskripsi: "Fungsi-fungsi untuk membuat garis lurus tak hingga, segmen garis, vektor berpanah, garis sejajar, garis tegak lurus (garis tinggi/sumbu), serta garis bagi sudut.",
+        fungsi: [
+          {
+            id: "buatGaris",
+            nama: "buatGaris()",
+            ringkasan: "Menggambar garis lurus tak hingga yang melalui dua titik (otomatis dipotong secara rapi di tepi kanvas gambar).",
+            sintaks: `geo.buatGaris(p1, p2, options)\ngeo.buatGaris(x1, y1, x2, y2, options)`,
+            parameter: [
+              { nama: "p1, p2", tipe: "Array | Object | number", ket: "Dua titik yang dilalui garis [x, y] atau koordinat x1, y1, x2, y2." },
+              { nama: "options", tipe: "Object", ket: "Opsi gaya garis." }
+            ],
+            opsi: [
+              { nama: "clipPad", tipe: "number", bawaan: "5", ket: "Jarak lebihan pemotongan di luar tepi area gambar." },
+              { nama: "stroke, strokeWidth, dashed", tipe: "string | number", bawaan: "-", ket: "Opsi gaya garis standar." }
+            ],
+            contohKode: `const geo = new GeoSVG(container, 320, 200);
+geo.buatGrid(25);
+
+const A = [100, 130], B = [220, 70];
+geo.buatGaris(A, B, { stroke: '#2563eb', strokeWidth: 2 });
+geo.buatTitik(A, { label: 'A', color: '#1e293b' });
+geo.buatTitik(B, { label: 'B', color: '#1e293b' });`
+          },
+          {
+            id: "buatSegmen",
+            nama: "buatSegmen()",
+            ringkasan: "Menggambar ruas garis lurus yang berawal di titik pertama dan berakhir di titik kedua.",
+            sintaks: `geo.buatSegmen(p1, p2, options)\ngeo.buatSegmen(x1, y1, x2, y2, options)`,
+            parameter: [
+              { nama: "p1, p2", tipe: "Array | Object | number", ket: "Titik ujung awal dan ujung akhir segmen." },
+              { nama: "options", tipe: "Object", ket: "Opsi gaya garis (stroke, strokeWidth, dashed, dll.)." }
+            ],
+            opsi: [
+              { nama: "stroke", tipe: "string", bawaan: "'black'", ket: "Warna ruas garis." },
+              { nama: "strokeWidth", tipe: "number", bawaan: "1", ket: "Ketebalan ruas garis." },
+              { nama: "dashed", tipe: "boolean | number | string", bawaan: "false", ket: "Pola garis putus-putus." }
+            ],
+            contohKode: `const geo = new GeoSVG(container, 320, 200);
+geo.buatSegmen([40, 50], [280, 50], { stroke: '#2563eb', strokeWidth: 3 });
+geo.buatSegmen([40, 100], [280, 100], { stroke: '#dc2626', strokeWidth: 2, dashed: true });
+geo.buatSegmen([40, 150], [280, 150], { stroke: '#16a34a', strokeWidth: 2, dashed: '10 4 2 4' });`
+          },
+          {
+            id: "buatVektor",
+            nama: "buatVektor()",
+            ringkasan: "Menggambar segmen garis berarah yang dilengkapi mata panah di titik ujung akhirnya.",
+            sintaks: `geo.buatVektor(p1, p2, options)\ngeo.buatVektor(x1, y1, x2, y2, options)`,
+            parameter: [
+              { nama: "p1, p2", tipe: "Array | Object | number", ket: "Titik pangkal dan titik ujung panah vektor." },
+              { nama: "options", tipe: "Object", ket: "Opsi warna dan gaya garis vektor." }
+            ],
+            opsi: [
+              { nama: "stroke", tipe: "string", bawaan: "'black'", ket: "Warna garis sekaligus warna mata panah." },
+              { nama: "strokeWidth", tipe: "number", bawaan: "1", ket: "Ketebalan batang vektor." }
+            ],
+            contohKode: `const geo = new GeoSVG(container, 320, 200);
+geo.buatGrid(25);
+
+const O = [50, 160];
+geo.buatVektor(O, [260, 150], { stroke: '#2563eb', strokeWidth: 2 });
+geo.buatVektor(O, [120, 40], { stroke: '#dc2626', strokeWidth: 2 });
+geo.buatVektor(O, [240, 50], { stroke: '#16a34a', strokeWidth: 2, dashed: true });
+geo.buatTitik(O, { label: 'O', labelPosition: 'kiri bawah', bold: true });`
+          },
+          {
+            id: "buatGarisSejajar",
+            nama: "buatGarisSejajar()",
+            ringkasan: "Menggambar garis lurus tak hingga yang sejajar dengan garis acuan (refP1-refP2), baik melalui sebuah titik tertentu maupun pada jarak geser (offset) tertentu.",
+            sintaks: `geo.buatGarisSejajar(refP1, refP2, passThroughOrDistance, options)`,
+            parameter: [
+              { nama: "refP1, refP2", tipe: "Array | Object", ket: "Dua titik pembentuk garis acuan." },
+              { nama: "passThroughOrDistance", tipe: "Array | Object | number", ket: "Titik [x, y] yang harus dilalui garis sejajar, ATAU angka jarak tegak lurus dari garis acuan." },
+              { nama: "options", tipe: "Object", ket: "Opsi gaya garis." }
+            ],
+            opsi: [],
+            contohKode: `const geo = new GeoSVG(container, 320, 200);
+const A = [60, 150], B = [240, 90], P = [130, 50];
+
+geo.buatGaris(A, B, { stroke: '#1e293b', strokeWidth: 2 });
+geo.buatGarisSejajar(A, B, P, { stroke: '#2563eb', dashed: true, strokeWidth: 2 });
+
+geo.buatTitik(A, { label: 'A' });
+geo.buatTitik(B, { label: 'B' });
+geo.buatTitik(P, { label: 'P (Dilalui)', color: '#2563eb', bold: true });`
+          },
+          {
+            id: "buatSegmenSejajar",
+            nama: "buatSegmenSejajar()",
+            ringkasan: "Menggambar ruas garis (segmen) yang sejajar dan searah dengan segmen acuan refP1-refP2.",
+            sintaks: `geo.buatSegmenSejajar(refP1, refP2, passThroughOrDistance, options)`,
+            parameter: [
+              { nama: "refP1, refP2", tipe: "Array | Object", ket: "Dua titik ujung segmen acuan." },
+              { nama: "passThroughOrDistance", tipe: "Array | Object | number", ket: "Titik awal segmen baru [x, y] atau angka jarak offset." },
+              { nama: "options", tipe: "Object", ket: "Opsi gaya dan panjang segmen." }
+            ],
+            opsi: [
+              { nama: "length", tipe: "number", bawaan: "panjang refP1-refP2", ket: "Panjang khusus untuk segmen sejajar yang dibuat." }
+            ],
+            contohKode: `const geo = new GeoSVG(container, 320, 200);
+const A = [50, 70], B = [220, 70];
+
+geo.buatSegmen(A, B, { stroke: '#1e293b', strokeWidth: 2 });
+geo.buatSegmenSejajar(A, B, 50, { stroke: '#2563eb', strokeWidth: 2 });
+geo.buatSegmenSejajar(A, B, 100, { stroke: '#16a34a', strokeWidth: 2, length: 110 });`
+          },
+          {
+            id: "hitungKakiTegakLurus",
+            nama: "hitungKakiTegakLurus()",
+            ringkasan: "Menghitung koordinat proyeksi tegak lurus (kaki garis tinggi) dari titik p ke garis yang melalui a dan b.",
+            sintaks: `geo.hitungKakiTegakLurus(p, a, b) // Mengembalikan [x, y]`,
+            parameter: [
+              { nama: "p", tipe: "Array | Object", ket: "Titik di luar garis [x, y]." },
+              { nama: "a, b", tipe: "Array | Object", ket: "Dua titik pembentuk garis alas." }
+            ],
+            opsi: [],
+            contohKode: `const geo = new GeoSVG(container, 320, 210);
+const A = [40, 170], B = [280, 170], C = [120, 40];
+const D = geo.hitungKakiTegakLurus(C, A, B);
+
+geo.buatSegitiga(A, B, C, { strokeWidth: 2 });
+geo.buatSegmen(C, D, { stroke: '#dc2626', dashed: true });
+geo.buatSiku(C, D, B, { size: 12, stroke: '#dc2626' });
+
+geo.buatTitik(C, { label: 'C', labelPosition: 'tengah atas' });
+geo.buatTitik(D, { label: 'D (Kaki)', color: '#dc2626', labelPosition: 'tengah bawah' });
+return 'Koordinat kaki D: [' + D.join(', ') + ']';`
+          },
+          {
+            id: "buatGarisTegakLurus",
+            nama: "buatGarisTegakLurus()",
+            ringkasan: "Menggambar garis lurus tak hingga yang tegak lurus terhadap segmen p1-p2, baik di titik tengahnya (garis sumbu) maupun melalui titik tertentu.",
+            sintaks: `geo.buatGarisTegakLurus(p1, p2, lewat, options)`,
+            parameter: [
+              { nama: "p1, p2", tipe: "Array | Object", ket: "Dua titik acuan." },
+              { nama: "lewat", tipe: "'tengah' | Array | Object", ket: "Isi 'tengah' (bawaan) untuk garis sumbu, atau koordinat titik [x, y] yang dilalui." },
+              { nama: "options", tipe: "Object", ket: "Opsi gaya garis." }
+            ],
+            opsi: [],
+            contohKode: `const geo = new GeoSVG(container, 320, 200);
+const A = [70, 120], B = [250, 90];
+const M = geo.hitungTitikTengah(A, B);
+
+geo.buatSegmen(A, B, { strokeWidth: 2 });
+geo.buatGarisTegakLurus(A, B, 'tengah', { stroke: '#2563eb', dashed: true });
+geo.buatTitik(A, { label: 'A' });
+geo.buatTitik(B, { label: 'B' });
+geo.buatTitik(M, { label: 'M', color: '#2563eb' });`
+          },
+          {
+            id: "hitungGarisBagi",
+            nama: "hitungGarisBagi()",
+            ringkasan: "Menghitung titik pangkal dan vektor satuan arah garis bagi sudut yang dibentuk oleh p1 - vertex - p3.",
+            sintaks: `geo.hitungGarisBagi(p1, vertex, p3) // Mengembalikan { titik: [vx, vy], arah: [ux, uy] }`,
+            parameter: [
+              { nama: "p1", tipe: "Array | Object", ket: "Titik pada kaki sudut pertama." },
+              { nama: "vertex", tipe: "Array | Object", ket: "Titik puncak sudut." },
+              { nama: "p3", tipe: "Array | Object", ket: "Titik pada kaki sudut kedua." }
+            ],
+            opsi: [],
+            contohKode: `const geo = new GeoSVG(container, 320, 200);
+const A = [260, 160], V = [60, 160], B = [200, 40];
+const info = geo.hitungGarisBagi(A, V, B);
+
+geo.buatSegmen(V, A);
+geo.buatSegmen(V, B);
+geo.buatVektor(V, [V[0] + info.arah[0]*150, V[1] + info.arah[1]*150], { stroke: '#16a34a' });
+return 'Vektor arah satuan: [' + info.arah.map(n => n.toFixed(3)).join(', ') + ']';`
+          },
+          {
+            id: "buatGarisBagi",
+            nama: "buatGarisBagi()",
+            ringkasan: "Menggambar ruas garis bagi sudut dari titik puncak (vertex) dengan panjang tertentu atau berhenti tepat pada sisi hadapannya.",
+            sintaks: `geo.buatGarisBagi(p1, vertex, p3, options)`,
+            parameter: [
+              { nama: "p1", tipe: "Array | Object", ket: "Titik pada kaki pertama." },
+              { nama: "vertex", tipe: "Array | Object", ket: "Titik sudut." },
+              { nama: "p3", tipe: "Array | Object", ket: "Titik pada kaki kedua." },
+              { nama: "options", tipe: "Object", ket: "Pengaturan panjang atau batas perpotongan garis bagi." }
+            ],
+            opsi: [
+              { nama: "panjang", tipe: "number", bawaan: "100", ket: "Panjang ruas garis bagi jika opsi 'sampai' tidak diisi." },
+              { nama: "sampai", tipe: "Array | Object", bawaan: "undefined", ket: "Objek garis [B, C] atau lingkaran tempat garis bagi berhenti." }
+            ],
+            contohKode: `const geo = new GeoSVG(container, 320, 210);
+const A = [50, 175], B = [270, 175], C = [190, 40];
+
+geo.buatSegitiga(A, B, C, { strokeWidth: 2 });
+geo.buatGarisBagi(B, A, C, {
+  sampai: [B, C],
+  stroke: '#dc2626',
+  strokeWidth: 2,
+  dashed: true
+});
+geo.buatTitik(A, { label: 'A', labelPosition: 'kiri bawah' });
+geo.buatTitik(B, { label: 'B', labelPosition: 'kanan bawah' });
+geo.buatTitik(C, { label: 'C', labelPosition: 'tengah atas' });`
+          }
+        ]
+      },
+
+      // =====================================================================
+      // KATEGORI 3: BANGUN DATAR & POLIGON
+      // =====================================================================
+      {
+        id: "bangun-datar",
+        judul: "3. Bangun Datar & Poligon",
+        deskripsi: "Fungsi-fungsi untuk menggambar segitiga, persegi, persegi panjang, poligon bebas, poligon segi-n beraturan, dan garis patah bersambung (polyline).",
+        fungsi: [
+          {
+            id: "buatSegitiga",
+            nama: "buatSegitiga()",
+            ringkasan: "Menggambar bangun datar segitiga dari 3 titik sudut.",
+            sintaks: `geo.buatSegitiga(p1, p2, p3, options)\ngeo.buatSegitiga(x1, y1, x2, y2, x3, y3, options)`,
+            parameter: [
+              { nama: "p1, p2, p3", tipe: "Array | Object | number", ket: "Tiga titik sudut segitiga." },
+              { nama: "options", tipe: "Object", ket: "Opsi gaya poligon dan label sisi (sideLabels)." }
+            ],
+            opsi: [
+              { nama: "fill, stroke, strokeWidth", tipe: "string | number", bawaan: "-", ket: "Gaya warna isi dan garis tepi segitiga." },
+              { nama: "sideLabels", tipe: "Array<string>", bawaan: "undefined", ket: "Daftar 3 teks label untuk masing-masing sisi segitiga." }
+            ],
+            contohKode: `const geo = new GeoSVG(container, 320, 210);
+const A = [60, 170], B = [260, 170], C = [160, 40];
+
+geo.buatSegitiga(A, B, C, {
+  fill: '#dbeafe',
+  stroke: '#1d4ed8',
+  strokeWidth: 2,
+  sideLabels: ['c = 10 cm', 'a = 8 cm', 'b = 8 cm']
+});`
+          },
+          {
+            id: "buatPersegi",
+            nama: "buatPersegi()",
+            ringkasan: "Menggambar bangun persegi (bujur sangkar) berdasarkan koordinat sudut kiri atas dan panjang sisinya.",
+            sintaks: `geo.buatPersegi(x, y, sisi, options)\ngeo.buatPersegi([x, y], sisi, options)`,
+            parameter: [
+              { nama: "x, y / titik", tipe: "number | Array | Object", ket: "Titik sudut kiri atas persegi." },
+              { nama: "sisi", tipe: "number", ket: "Panjang sisi persegi dalam piksel." },
+              { nama: "options", tipe: "Object", ket: "Opsi warna isi dan garis tepi." }
+            ],
+            opsi: [],
+            contohKode: `const geo = new GeoSVG(container, 320, 210);
+geo.buatGrid(25);
+geo.buatPersegi([100, 45], 120, {
+  fill: '#dcfce7',
+  stroke: '#15803d',
+  strokeWidth: 2
+});`
+          },
+          {
+            id: "buatPersegiPanjang",
+            nama: "buatPersegiPanjang()",
+            ringkasan: "Menggambar persegi panjang berdasarkan titik sudut kiri atas, lebar (width), dan tinggi (height).",
+            sintaks: `geo.buatPersegiPanjang(x, y, width, height, options)\ngeo.buatPersegiPanjang([x, y], width, height, options)`,
+            parameter: [
+              { nama: "x, y / titik", tipe: "number | Array | Object", ket: "Koordinat sudut kiri atas." },
+              { nama: "width", tipe: "number", ket: "Lebar mendatar." },
+              { nama: "height", tipe: "number", ket: "Tinggi tegak." },
+              { nama: "options", tipe: "Object", ket: "Opsi gaya SVG." }
+            ],
+            opsi: [],
+            contohKode: `const geo = new GeoSVG(container, 320, 210);
+geo.buatGrid(25);
+geo.buatPersegiPanjang([60, 55], 200, 100, {
+  fill: '#fef3c7',
+  stroke: '#b45309',
+  strokeWidth: 2
+});`
+          },
+          {
+            id: "buatPoligon",
+            nama: "buatPoligon()",
+            ringkasan: "Menggambar bangun poligon tertutup dari daftar titik sudut [x, y].",
+            sintaks: `geo.buatPoligon(points, options)`,
+            parameter: [
+              { nama: "points", tipe: "Array<Array|Object>", ket: "Daftar titik sudut poligon, misal [[x1, y1], [x2, y2], ...]." },
+              { nama: "options", tipe: "Object", ket: "Opsi gaya dan label sisi." }
+            ],
+            opsi: [
+              { nama: "sideLabels", tipe: "Array<string>", bawaan: "undefined", ket: "Label teks untuk setiap sisi poligon." },
+              { nama: "labelOffset", tipe: "number", bawaan: "15", ket: "Jarak label sisi dari garis sisi." }
+            ],
+            contohKode: `const geo = new GeoSVG(container, 320, 210);
+const trapesium = [[90, 55], [230, 55], [270, 165], [50, 165]];
+
+geo.buatPoligon(trapesium, {
+  fill: '#f3e8ff',
+  stroke: '#7e22ce',
+  strokeWidth: 2,
+  sideLabels: ['Atas', 'Miring Kanan', 'Alas', 'Miring Kiri']
+});`
+          },
+          {
+            id: "buatPoligonBeraturan",
+            nama: "buatPoligonBeraturan()",
+            ringkasan: "Menggambar poligon segi-n beraturan (segi lima, segi enam, segi delapan, dst.) berdasarkan titik pusat dan jari-jari lingkaran luarnya.",
+            sintaks: `geo.buatPoligonBeraturan(cx, cy, radius, sides, options)\ngeo.buatPoligonBeraturan(pusat, radius, sides, options)`,
+            parameter: [
+              { nama: "cx, cy / pusat", tipe: "number | Array | Object", ket: "Koordinat pusat poligon." },
+              { nama: "radius", tipe: "number", ket: "Jarak dari pusat ke setiap titik sudut." },
+              { nama: "sides", tipe: "number", ket: "Jumlah sisi (bilangan bulat >= 3)." },
+              { nama: "options", tipe: "Object", ket: "Opsi rotasi sudut awal dan gaya." }
+            ],
+            opsi: [
+              { nama: "startAngle", tipe: "number", bawaan: "-90 (atau 90 di yUp)", ket: "Sudut titik pertama dalam derajat." }
+            ],
+            contohKode: `const geo = new GeoSVG(container, 320, 210);
+geo.buatPoligonBeraturan([95, 105], 65, 5, {
+  fill: '#dbeafe', stroke: '#2563eb', strokeWidth: 2
+});
+geo.buatPoligonBeraturan([225, 105], 65, 6, {
+  fill: '#fce7f3', stroke: '#db2777', strokeWidth: 2
+});`
+          },
+          {
+            id: "buatPolyline",
+            nama: "buatPolyline()",
+            ringkasan: "Menggambar rangkaian garis patah terbuka yang menghubungkan daftar titik secara berurutan.",
+            sintaks: `geo.buatPolyline(points, options)`,
+            parameter: [
+              { nama: "points", tipe: "Array<Array|Object>", ket: "Daftar titik yang dihubungkan." },
+              { nama: "options", tipe: "Object", ket: "Opsi gaya garis dan mata panah." }
+            ],
+            opsi: [
+              { nama: "panah", tipe: "boolean", bawaan: "false", ket: "Jika true, menambahkan mata panah pada ujung segmen terakhir." }
+            ],
+            contohKode: `const geo = new GeoSVG(container, 320, 200);
+geo.buatGrid(25);
+geo.buatPolyline([[40, 150], [110, 60], [190, 140], [275, 45]], {
+  stroke: '#2563eb',
+  strokeWidth: 2.5,
+  panah: true
+});`
+          }
+        ]
+      },
+
+      // =====================================================================
+      // KATEGORI 4: LINGKARAN, BUSUR, & KURVA
+      // =====================================================================
+      {
+        id: "lingkaran-kurva",
+        judul: "4. Lingkaran, Busur, & Kurva",
+        deskripsi: "Fungsi untuk menggambar lingkaran, elips, lingkaran luar & dalam segitiga, setengah lingkaran, busur, juring, tembereng, kurva Bezier, dan kurva halus (spline).",
+        fungsi: [
+          {
+            id: "buatLingkaran",
+            nama: "buatLingkaran()",
+            ringkasan: "Menggambar lingkaran dengan titik pusat dan jari-jari (r).",
+            sintaks: `geo.buatLingkaran(cx, cy, r, options)\ngeo.buatLingkaran(pusat, r, options)`,
+            parameter: [
+              { nama: "cx, cy / pusat", tipe: "number | Array | Object", ket: "Titik pusat lingkaran." },
+              { nama: "r", tipe: "number", ket: "Jari-jari lingkaran (harus >= 0)." },
+              { nama: "options", tipe: "Object", ket: "Opsi gaya lingkaran." }
+            ],
+            opsi: [],
+            contohKode: `const geo = new GeoSVG(container, 320, 210);
+geo.buatLingkaran([160, 105], 75, {
+  fill: '#e0f2fe',
+  stroke: '#0284c7',
+  strokeWidth: 2
+});
+geo.buatTitik([160, 105], { label: 'O', color: '#0284c7', bold: true });`
+          },
+          {
+            id: "buatElips",
+            nama: "buatElips()",
+            ringkasan: "Menggambar bangun elips dengan jari-jari mendatar (rx) dan jari-jari tegak (ry).",
+            sintaks: `geo.buatElips(cx, cy, rx, ry, options)\ngeo.buatElips(pusat, rx, ry, options)`,
+            parameter: [
+              { nama: "cx, cy / pusat", tipe: "number | Array | Object", ket: "Titik pusat elips." },
+              { nama: "rx", tipe: "number", ket: "Jari-jari sumbu X (mendatar)." },
+              { nama: "ry", tipe: "number", ket: "Jari-jari sumbu Y (tegak)." },
+              { nama: "options", tipe: "Object", ket: "Opsi gaya SVG." }
+            ],
+            opsi: [],
+            contohKode: `const geo = new GeoSVG(container, 320, 210);
+geo.buatElips([160, 105], 110, 60, {
+  fill: '#fae8ff',
+  stroke: '#9333ea',
+  strokeWidth: 2
+});`
+          },
+          {
+            id: "hitungLingkaranLuar",
+            nama: "hitungLingkaranLuar()",
+            ringkasan: "Menghitung koordinat pusat dan jari-jari lingkaran luar segitiga (circumcircle) yang melalui tiga titik sudut.",
+            sintaks: `geo.hitungLingkaranLuar(p1, p2, p3) // Mengembalikan { pusat: [x, y], r }`,
+            parameter: [
+              { nama: "p1, p2, p3", tipe: "Array | Object", ket: "Tiga titik sudut segitiga (tidak boleh segaris)." }
+            ],
+            opsi: [],
+            contohKode: `const geo = new GeoSVG(container, 320, 210);
+const L = geo.hitungLingkaranLuar([70, 160], [250, 160], [140, 50]);
+geo.buatLingkaran(L.pusat, L.r, { stroke: '#2563eb' });
+return 'Pusat: [' + L.pusat.map(n => n.toFixed(1)).join(', ') + '], r = ' + L.r.toFixed(1);`
+          },
+          {
+            id: "buatLingkaranLuar",
+            nama: "buatLingkaranLuar()",
+            ringkasan: "Menghitung sekaligus menggambar lingkaran luar segitiga yang melalui p1, p2, dan p3.",
+            sintaks: `geo.buatLingkaranLuar(p1, p2, p3, options)`,
+            parameter: [
+              { nama: "p1, p2, p3", tipe: "Array | Object", ket: "Tiga titik sudut segitiga." },
+              { nama: "options", tipe: "Object", ket: "Opsi gaya lingkaran dan penanda pusat." }
+            ],
+            opsi: [
+              { nama: "titikPusat", tipe: "boolean", bawaan: "false", ket: "Jika true, otomatis menggambar titik pusat lingkaran luar." },
+              { nama: "labelPusat", tipe: "string", bawaan: "undefined", ket: "Label teks untuk titik pusat (mis. 'O')." }
+            ],
+            contohKode: `const geo = new GeoSVG(container, 320, 220);
+const A = [75, 165], B = [245, 165], C = [140, 55];
+
+geo.buatSegitiga(A, B, C, { fill: '#f1f5f9', strokeWidth: 2 });
+geo.buatLingkaranLuar(A, B, C, {
+  stroke: '#dc2626',
+  dashed: true,
+  titikPusat: true,
+  labelPusat: 'O'
+});`
+          },
+          {
+            id: "hitungLingkaranDalam",
+            nama: "hitungLingkaranDalam()",
+            ringkasan: "Menghitung koordinat pusat dan jari-jari lingkaran dalam segitiga (incircle) yang menyinggung ketiga sisinya.",
+            sintaks: `geo.hitungLingkaranDalam(p1, p2, p3) // Mengembalikan { pusat: [x, y], r }`,
+            parameter: [
+              { nama: "p1, p2, p3", tipe: "Array | Object", ket: "Tiga titik sudut segitiga." }
+            ],
+            opsi: [],
+            contohKode: `const geo = new GeoSVG(container, 320, 210);
+const A = [50, 175], B = [270, 175], C = [160, 35];
+const L = geo.hitungLingkaranDalam(A, B, C);
+geo.buatSegitiga(A, B, C);
+geo.buatLingkaran(L.pusat, L.r, { stroke: '#16a34a' });
+return 'Pusat Incircle: [' + L.pusat.map(n => n.toFixed(1)).join(', ') + '], r = ' + L.r.toFixed(1);`
+          },
+          {
+            id: "buatLingkaranDalam",
+            nama: "buatLingkaranDalam()",
+            ringkasan: "Menghitung sekaligus menggambar lingkaran dalam segitiga yang menyinggung ketiga sisi segitiga.",
+            sintaks: `geo.buatLingkaranDalam(p1, p2, p3, options)`,
+            parameter: [
+              { nama: "p1, p2, p3", tipe: "Array | Object", ket: "Tiga titik sudut segitiga." },
+              { nama: "options", tipe: "Object", ket: "Opsi gaya lingkaran dan titik pusat." }
+            ],
+            opsi: [
+              { nama: "titikPusat", tipe: "boolean", bawaan: "false", ket: "Jika true, menggambar titik pusat lingkaran dalam." },
+              { nama: "labelPusat", tipe: "string", bawaan: "undefined", ket: "Label teks titik pusat (mis. 'I')." }
+            ],
+            contohKode: `const geo = new GeoSVG(container, 320, 210);
+const A = [50, 175], B = [270, 175], C = [145, 35];
+
+geo.buatSegitiga(A, B, C, { strokeWidth: 2 });
+geo.buatLingkaranDalam(A, B, C, {
+  fill: '#dcfce7',
+  stroke: '#16a34a',
+  strokeWidth: 2,
+  titikPusat: true,
+  labelPusat: 'I'
+});`
+          },
+          {
+            id: "buatSetengahLingkaran",
+            nama: "buatSetengahLingkaran()",
+            ringkasan: "Menggambar setengah lingkaran dengan segmen p1-p2 sebagai garis diameternya.",
+            sintaks: `geo.buatSetengahLingkaran(p1, p2, options)\ngeo.buatSetengahLingkaran(x1, y1, x2, y2, options)`,
+            parameter: [
+              { nama: "p1, p2", tipe: "Array | Object | number", ket: "Dua titik ujung diameter setengah lingkaran." },
+              { nama: "options", tipe: "Object", ket: "Opsi arah lengkungan dan penutupan diameter." }
+            ],
+            opsi: [
+              { nama: "sisi", tipe: "'kiri' | 'kanan'", bawaan: "'kiri'", ket: "Sisi tempat busur menggembung dilihat dari arah p1 menuju p2." },
+              { nama: "tutup", tipe: "boolean", bawaan: "true", ket: "Jika true, garis diameter ikut digambar menutup bangun." }
+            ],
+            contohKode: `const geo = new GeoSVG(container, 320, 210);
+geo.buatSetengahLingkaran([60, 140], [260, 140], {
+  sisi: 'kiri',
+  fill: '#dbeafe',
+  stroke: '#2563eb',
+  strokeWidth: 2
+});`
+          },
+          {
+            id: "buatBusur",
+            nama: "buatBusur()",
+            ringkasan: "Menggambar garis lengkung busur lingkaran berdasarkan pusat, jari-jari, sudut awal, dan sudut akhir (dalam derajat).",
+            sintaks: `geo.buatBusur(cx, cy, r, startAngle, endAngle, options)\ngeo.buatBusur(pusat, r, startAngle, endAngle, options)`,
+            parameter: [
+              { nama: "cx, cy / pusat", tipe: "number | Array | Object", ket: "Titik pusat busur." },
+              { nama: "r", tipe: "number", ket: "Jari-jari busur." },
+              { nama: "startAngle, endAngle", tipe: "number", ket: "Sudut mulai dan sudut akhir dalam derajat." },
+              { nama: "options", tipe: "Object", ket: "Opsi arah putaran dan gaya garis." }
+            ],
+            opsi: [
+              { nama: "sweep", tipe: "1 | 0", bawaan: "1", ket: "Arah putaran busur (1 = searah jarum jam di layar standar, 0 = berlawanan)." }
+            ],
+            contohKode: `const geo = new GeoSVG(container, 320, 200);
+geo.buatBusur([160, 130], 85, 200, 340, {
+  stroke: '#dc2626',
+  strokeWidth: 3
+});
+geo.buatTitik([160, 130], { label: 'Pusat' });`
+          },
+          {
+            id: "buatJuring",
+            nama: "buatJuring()",
+            ringkasan: "Menggambar bangun juring lingkaran (potongan kue) dari titik pusat ke busur antara startAngle dan endAngle.",
+            sintaks: `geo.buatJuring(cx, cy, r, startAngle, endAngle, options)\ngeo.buatJuring(pusat, r, startAngle, endAngle, options)`,
+            parameter: [
+              { nama: "cx, cy / pusat", tipe: "number | Array | Object", ket: "Titik pusat lingkaran." },
+              { nama: "r", tipe: "number", ket: "Jari-jari juring." },
+              { nama: "startAngle, endAngle", tipe: "number", ket: "Sudut awal dan akhir dalam derajat." },
+              { nama: "options", tipe: "Object", ket: "Opsi warna isi (fill), garis tepi, dan sweep." }
+            ],
+            opsi: [
+              { nama: "sweep", tipe: "1 | 0", bawaan: "1", ket: "Arah sapuan sudut juring." }
+            ],
+            contohKode: `const geo = new GeoSVG(container, 320, 210);
+geo.buatLingkaran([160, 110], 75, { stroke: '#cbd5e1', dashed: true });
+geo.buatJuring([160, 110], 75, -60, 30, {
+  fill: '#fde047',
+  stroke: '#ca8a04',
+  strokeWidth: 2
+});`
+          },
+          {
+            id: "buatTembereng",
+            nama: "buatTembereng()",
+            ringkasan: "Menggambar bangun tembereng lingkaran (daerah yang dibatasi oleh busur dan tali busurnya).",
+            sintaks: `geo.buatTembereng(cx, cy, r, startAngle, endAngle, options)\ngeo.buatTembereng(pusat, r, startAngle, endAngle, options)`,
+            parameter: [
+              { nama: "cx, cy / pusat", tipe: "number | Array | Object", ket: "Titik pusat lingkaran." },
+              { nama: "r", tipe: "number", ket: "Jari-jari lingkaran." },
+              { nama: "startAngle, endAngle", tipe: "number", ket: "Sudut awal dan akhir tembereng dalam derajat." },
+              { nama: "options", tipe: "Object", ket: "Opsi warna isi dan garis tepi." }
+            ],
+            opsi: [],
+            contohKode: `const geo = new GeoSVG(container, 320, 210);
+geo.buatLingkaran([160, 110], 75, { stroke: '#94a3b8' });
+geo.buatTembereng([160, 110], 75, 200, 340, {
+  fill: '#bbf7d0',
+  stroke: '#16a34a',
+  strokeWidth: 2
+});`
+          },
+          {
+            id: "buatKurvaBezier",
+            nama: "buatKurvaBezier()",
+            ringkasan: "Menggambar kurva Bezier kuadratik (3 titik) atau kubik (4 titik).",
+            sintaks: `geo.buatKurvaBezier(points, options)`,
+            parameter: [
+              { nama: "points", tipe: "Array<Array|Object>", ket: "Daftar 3 titik (kuadratik) atau 4 titik (kubik) termasuk titik kontrol." },
+              { nama: "options", tipe: "Object", ket: "Opsi gaya garis kurva." }
+            ],
+            opsi: [],
+            contohKode: `const geo = new GeoSVG(container, 320, 200);
+const pts = [[40, 160], [160, 20], [280, 160]];
+geo.buatPolyline(pts, { stroke: '#cbd5e1', dashed: true });
+geo.buatKurvaBezier(pts, { stroke: '#2563eb', strokeWidth: 3 });
+pts.forEach((p, i) => geo.buatTitik(p, { label: 'P' + i }));`
+          },
+          {
+            id: "buatKurvaHalus",
+            nama: "buatKurvaHalus()",
+            ringkasan: "Menggambar kurva lengkung mulus (smooth spline seperti grafik Excel) yang melewati serangkaian titik.",
+            sintaks: `geo.buatKurvaHalus(points, options)`,
+            parameter: [
+              { nama: "points", tipe: "Array<Array|Object>", ket: "Daftar titik-titik yang akan dilewati kurva." },
+              { nama: "options", tipe: "Object", ket: "Opsi kelengkungan (tension) dan gaya garis." }
+            ],
+            opsi: [
+              { nama: "tension", tipe: "number", bawaan: "0.2", ket: "Tingkat kelengkungan kurva (0 = lurus kaku, 0.2 - 0.3 = halus)." }
+            ],
+            contohKode: `const geo = new GeoSVG(container, 320, 200);
+geo.buatGrid(25);
+const pts = [[35, 150], [95, 60], [165, 140], [225, 45], [285, 110]];
+geo.buatKurvaHalus(pts, { stroke: '#9333ea', strokeWidth: 2.5, tension: 0.25 });
+pts.forEach(p => geo.buatTitik(p, { color: '#9333ea' }));`
+          }
+        ]
+      },
+
+      // =====================================================================
+      // KATEGORI 5: SUDUT, PENANDA, & ARSIR
+      // =====================================================================
+      {
+        id: "sudut-penanda",
+        judul: "5. Sudut, Penanda, & Arsir",
+        deskripsi: "Fungsi-fungsi untuk menghitung besar sudut, menggambar busur sudut, simbol siku-siku, tanda sisi sama panjang, garis ukur dimensi, dan pola arsir.",
+        fungsi: [
+          {
+            id: "hitungSudut",
+            nama: "hitungSudut()",
+            ringkasan: "Menghitung besar sudut dalam satuan derajat yang dibentuk oleh titik p1 - vertex - p3.",
+            sintaks: `geo.hitungSudut(p1, vertex, p3, options) // Mengembalikan angka derajat`,
+            parameter: [
+              { nama: "p1", tipe: "Array | Object", ket: "Titik pada kaki pertama." },
+              { nama: "vertex", tipe: "Array | Object", ket: "Titik puncak sudut." },
+              { nama: "p3", tipe: "Array | Object", ket: "Titik pada kaki kedua." },
+              { nama: "options", tipe: "Object", ket: "Opsi sudut refleks dan pembulatan desimal." }
+            ],
+            opsi: [
+              { nama: "refleks", tipe: "boolean", bawaan: "false", ket: "Jika true, mengembalikan sudut refleks (180° s.d. 360°)." },
+              { nama: "desimal", tipe: "number", bawaan: "2", ket: "Jumlah angka di belakang koma." }
+            ],
+            contohKode: `const geo = new GeoSVG(container, 320, 200);
+const A = [260, 160], B = [60, 160], C = [180, 40];
+const besar = geo.hitungSudut(A, B, C, { desimal: 1 });
+
+geo.buatSegmen(B, A, { strokeWidth: 2 });
+geo.buatSegmen(B, C, { strokeWidth: 2 });
+geo.buatSudut(A, B, C, { radius: 45, label: besar + '°', bold: true });
+return 'Besar sudut ABC = ' + besar + '°';`
+          },
+          {
+            id: "buatSudut",
+            nama: "buatSudut()",
+            ringkasan: "Menggambar juring penanda sudut pada titik puncak p2 beserta teks label sudutnya.",
+            sintaks: `geo.buatSudut(p1, p2, p3, options)`,
+            parameter: [
+              { nama: "p1", tipe: "Array | Object", ket: "Titik pada kaki pertama." },
+              { nama: "p2", tipe: "Array | Object", ket: "Titik puncak sudut (vertex)." },
+              { nama: "p3", tipe: "Array | Object", ket: "Titik pada kaki kedua." },
+              { nama: "options", tipe: "Object", ket: "Opsi jari-jari busur, warna, dan label sudut." }
+            ],
+            opsi: [
+              { nama: "radius", tipe: "number", bawaan: "30", ket: "Jari-jari lengkungan penanda sudut." },
+              { nama: "refleks (alias: reflex)", tipe: "boolean", bawaan: "false", ket: "Gambar busur sudut refleks (> 180°)." },
+              { nama: "fill", tipe: "string", bawaan: "'rgba(0,0,0,0.1)'", ket: "Warna isi daerah sudut." },
+              { nama: "label", tipe: "string", bawaan: "undefined", ket: "Teks label sudut (mis. '60°' atau 'θ')." },
+              { nama: "labelRadius", tipe: "number", bawaan: "radius + 15", ket: "Jarak label dari titik puncak sudut." },
+              { nama: "labelColor (alias: color)", tipe: "string", bawaan: "'black'", ket: "Warna teks label." }
+            ],
+            contohKode: `const geo = new GeoSVG(container, 320, 210);
+const A = [260, 165], B = [65, 165], C = [200, 45];
+
+geo.buatSegitiga(A, B, C, { strokeWidth: 2 });
+geo.buatSudut(A, B, C, {
+  radius: 42,
+  fill: 'rgba(37, 99, 235, 0.2)',
+  stroke: '#2563eb',
+  label: 'α',
+  fontSize: '15px',
+  bold: true
+});`
+          },
+          {
+            id: "buatSiku",
+            nama: "buatSiku()",
+            ringkasan: "Menggambar tanda sudut siku-siku (persegi kecil di sudut p2).",
+            sintaks: `geo.buatSiku(p1, p2, p3, options)`,
+            parameter: [
+              { nama: "p1", tipe: "Array | Object", ket: "Titik arah kaki pertama." },
+              { nama: "p2", tipe: "Array | Object", ket: "Titik puncak sudut siku-siku." },
+              { nama: "p3", tipe: "Array | Object", ket: "Titik arah kaki kedua." },
+              { nama: "options", tipe: "Object", ket: "Opsi ukuran tanda siku-siku dan titik di dalamnya." }
+            ],
+            opsi: [
+              { nama: "size (alias: radius)", tipe: "number", bawaan: "15", ket: "Panjang sisi tanda siku-siku." },
+              { nama: "dot (alias: showDot)", tipe: "boolean", bawaan: "false", ket: "Menampilkan titik kecil di tengah tanda siku-siku." },
+              { nama: "fill", tipe: "string", bawaan: "'none'", ket: "Warna isi kotak siku-siku." }
+            ],
+            contohKode: `const geo = new GeoSVG(container, 320, 210);
+const A = [70, 45], B = [70, 170], C = [250, 170];
+
+geo.buatSegitiga(A, B, C, { strokeWidth: 2 });
+geo.buatSiku(A, B, C, {
+  size: 18,
+  fill: '#fee2e2',
+  stroke: '#dc2626',
+  dot: true
+});`
+          },
+          {
+            id: "buatTandaSamaPanjang",
+            nama: "buatTandaSamaPanjang()",
+            ringkasan: "Menggambar garis-garis strip kecil (tick marks) di tengah ruas garis sebagai penanda sisi sama panjang.",
+            sintaks: `geo.buatTandaSamaPanjang(p1, p2, options)\ngeo.buatTandaSamaPanjang(x1, y1, x2, y2, options)`,
+            parameter: [
+              { nama: "p1, p2", tipe: "Array | Object | number", ket: "Dua titik ujung segmen yang diberi tanda." },
+              { nama: "options", tipe: "Object", ket: "Opsi jumlah strip, panjang, dan jarak." }
+            ],
+            opsi: [
+              { nama: "count (alias: ticks, jumlah)", tipe: "number", bawaan: "1", ket: "Banyaknya garis strip (1, 2, 3, dst.)." },
+              { nama: "size (alias: length, panjang)", tipe: "number", bawaan: "10", ket: "Panjang garis strip." },
+              { nama: "spacing (alias: gap, jarak)", tipe: "number", bawaan: "4", ket: "Jarak antar garis strip." },
+              { nama: "stroke (alias: color)", tipe: "string", bawaan: "'black'", ket: "Warna garis strip." }
+            ],
+            contohKode: `const geo = new GeoSVG(container, 320, 210);
+const A = [60, 170], B = [260, 170], C = [160, 35];
+
+geo.buatSegitiga(A, B, C, { strokeWidth: 2 });
+geo.buatTandaSamaPanjang(A, C, { count: 2, color: '#dc2626', strokeWidth: 2 });
+geo.buatTandaSamaPanjang(B, C, { count: 2, color: '#dc2626', strokeWidth: 2 });
+geo.buatTandaSamaPanjang(A, B, { count: 1, color: '#2563eb', strokeWidth: 2 });`
+          },
+          {
+            id: "buatDimensi",
+            nama: "buatDimensi()",
+            ringkasan: "Menggambar garis ukur dimensi lengkap dengan panah dua arah, garis ekstensi tepi, dan label ukuran.",
+            sintaks: `geo.buatDimensi(p1, p2, offset, label, options)`,
+            parameter: [
+              { nama: "p1, p2", tipe: "Array | Object", ket: "Dua titik ujung objek yang diukur." },
+              { nama: "offset", tipe: "number", ket: "Jarak geser garis dimensi dari segmen p1-p2 (positif/negatif menentukan arah sisi)." },
+              { nama: "label", tipe: "string", ket: "Teks keterangan ukuran (mis. '12 cm')." },
+              { nama: "options", tipe: "Object", ket: "Opsi warna dan ukuran font." }
+            ],
+            opsi: [],
+            contohKode: `const geo = new GeoSVG(container, 320, 210);
+geo.buatPersegiPanjang([70, 50], 180, 90, {
+  fill: '#eff6ff', stroke: '#1d4ed8', strokeWidth: 2
+});
+geo.buatDimensi([70, 140], [250, 140], 30, '18 cm', { stroke: '#dc2626' });
+geo.buatDimensi([250, 50], [250, 140], 30, '9 cm', { stroke: '#16a34a' });`
+          },
+          {
+            id: "buatPolaArsir",
+            nama: "buatPolaArsir()",
+            ringkasan: "Membuat pola arsiran (<pattern>) di dalam <defs> yang kemudian bisa dipakai sebagai nilai fill: 'url(#id)' pada bangun datar apa pun.",
+            sintaks: `geo.buatPolaArsir(id, tipe, options)`,
+            parameter: [
+              { nama: "id", tipe: "string", ket: "ID unik pola arsir (dipanggil dengan fill: 'url(#id)')." },
+              { nama: "tipe", tipe: "string", ket: "Jenis arsiran: 'miring' (bawaan), 'vertikal', 'horizontal', atau 'silang'." },
+              { nama: "options", tipe: "Object", ket: "Opsi kerapatan dan warna garis arsir." }
+            ],
+            opsi: [
+              { nama: "size", tipe: "number", bawaan: "10", ket: "Jarak antar garis arsir dalam piksel." },
+              { nama: "stroke (alias: color)", tipe: "string", bawaan: "'black'", ket: "Warna garis arsir." },
+              { nama: "strokeWidth", tipe: "number", bawaan: "1", ket: "Ketebalan garis arsir." }
+            ],
+            contohKode: `const geo = new GeoSVG(container, 320, 210);
+geo.buatPolaArsir('arsirBiru', 'miring', { size: 8, color: '#2563eb', strokeWidth: 1.5 });
+geo.buatPolaArsir('arsirMerah', 'silang', { size: 10, color: '#dc2626' });
+
+geo.buatLingkaran([115, 105], 65, { fill: 'url(#arsirBiru)', stroke: '#1d4ed8', strokeWidth: 2 });
+geo.buatPersegi([155, 45], 120, { fill: 'url(#arsirMerah)', stroke: '#b91c1c', strokeWidth: 2 });`
+          }
+        ]
+      },
+
+      // =====================================================================
+      // KATEGORI 6: TEKS, LABEL, & LATEX
+      // =====================================================================
+      {
+        id: "teks-latex",
+        judul: "6. Teks, Label, & LaTeX",
+        deskripsi: "Fungsi untuk menampilkan teks biasa dengan perataan 9 arah, merender rumus matematika LaTeX (KaTeX/MathJax), serta memberi label panjang sisi otomatis.",
+        fungsi: [
+          {
+            id: "buatTeks",
+            nama: "buatTeks()",
+            ringkasan: "Menampilkan teks pada koordinat (x, y) di lapisan paling atas ('labels') dengan perataan posisi yang fleksibel.",
+            sintaks: `geo.buatTeks(x, y, textContent, options)\ngeo.buatTeks([x, y], textContent, options)`,
+            parameter: [
+              { nama: "x, y / [x, y]", tipe: "number | Array", ket: "Koordinat titik jangkar teks." },
+              { nama: "textContent", tipe: "string", ket: "Isi teks yang ingin ditampilkan." },
+              { nama: "options", tipe: "Object", ket: "Pengaturan font, warna, dan posisi perataan." }
+            ],
+            opsi: [
+              { nama: "position", tipe: "string", bawaan: "'bottom-left'", ket: "Posisi teks terhadap titik: 'tengah', 'kiri atas', 'kanan atas', 'tengah atas', dll." },
+              { nama: "fill (alias: color)", tipe: "string", bawaan: "'black'", ket: "Warna huruf." },
+              { nama: "fontSize", tipe: "string", bawaan: "warisan CSS", ket: "Ukuran huruf, misal '14px'." },
+              { nama: "bold", tipe: "boolean", bawaan: "false", ket: "Cetak tebal huruf." }
+            ],
+            contohKode: `const geo = new GeoSVG(container, 320, 200);
+geo.buatGrid(25);
+const P = [160, 100];
+geo.buatTitik(P, { color: '#dc2626', size: 5 });
+
+geo.buatTeks(P, 'Atas Tengah', { position: 'tengah atas', color: '#2563eb', bold: true });
+geo.buatTeks(P, 'Bawah Kanan', { position: 'kanan bawah', color: '#16a34a' });`
+          },
+          {
+            id: "buatLatex",
+            nama: "buatLatex()",
+            ringkasan: "Merender ekspresi rumus matematika LaTeX menggunakan KaTeX atau MathJax di dalam elemen <foreignObject> SVG.",
+            sintaks: `geo.buatLatex(x, y, latexString, options)\ngeo.buatLatex([x, y], latexString, options)`,
+            parameter: [
+              { nama: "x, y / [x, y]", tipe: "number | Array", ket: "Koordinat penempatan rumus." },
+              { nama: "latexString", tipe: "string", ket: "Kode rumus LaTeX (mis. 'c = \\\\sqrt{a^2 + b^2}')." },
+              { nama: "options", tipe: "Object", ket: "Opsi ukuran huruf, warna, dan posisi." }
+            ],
+            opsi: [
+              { nama: "position", tipe: "string", bawaan: "'top-right'", ket: "Perataan kotak rumus terhadap titik (x, y)." },
+              { nama: "color", tipe: "string", bawaan: "'black'", ket: "Warna teks rumus." },
+              { nama: "fontSize", tipe: "string", bawaan: "undefined", ket: "Ukuran font rumus (mis. '16px')." },
+              { nama: "displayMode", tipe: "boolean", bawaan: "false", ket: "Mode blok rumus matematika." }
+            ],
+            contohKode: `const geo = new GeoSVG(container, 320, 210);
+const A = [50, 165], B = [230, 165], C = [50, 45];
+
+geo.buatSegitiga(A, B, C, { fill: '#eff6ff', stroke: '#1d4ed8', strokeWidth: 2 });
+geo.buatSiku(C, A, B, { size: 14 });
+
+geo.buatLatex([155, 95], 'c = \\\\sqrt{a^2 + b^2}', {
+  position: 'kanan atas',
+  color: '#1d4ed8',
+  fontSize: '15px'
+});`
+          },
+          {
+            id: "buatLabelSisi",
+            nama: "buatLabelSisi()",
+            ringkasan: "Menempatkan label teks tepat di tengah sisi p1-p2 dengan pergeseran tegak lurus otomatis. Jika teks diisi 'auto' atau null, panjang sisi dihitung otomatis.",
+            sintaks: `geo.buatLabelSisi(p1, p2, teks, options)`,
+            parameter: [
+              { nama: "p1, p2", tipe: "Array | Object", ket: "Dua titik ujung sisi." },
+              { nama: "teks", tipe: "string | null | 'auto'", ket: "Teks label, atau biarkan null/'auto' untuk menampilkan panjang sisi otomatis." },
+              { nama: "options", tipe: "Object", ket: "Opsi jarak, arah sisi, skala ukuran, dan satuan." }
+            ],
+            opsi: [
+              { nama: "jarak", tipe: "number", bawaan: "14", ket: "Jarak label dari garis sisi dalam piksel." },
+              { nama: "sisi", tipe: "'kanan' | 'kiri'", bawaan: "'kanan'", ket: "Arah penempatan label dilihat dari p1 ke p2." },
+              { nama: "pusat", tipe: "Array | Object", bawaan: "undefined", ket: "Titik referensi dalam bangun; label otomatis ditaruh menjauhi titik ini." },
+              { nama: "skala, desimal, satuan", tipe: "number | string", bawaan: "1, 1, ''", ket: "Pengali panjang, pembulatan desimal, dan akhiran satuan (mis. ' cm') saat teks='auto'." }
+            ],
+            contohKode: `const geo = new GeoSVG(container, 320, 200);
+const A = [50, 150], B = [250, 150];
+
+geo.buatSegmen(A, B, { strokeWidth: 2, stroke: '#2563eb' });
+geo.buatTitik(A, { label: 'A', labelPosition: 'kiri tengah' });
+geo.buatTitik(B, { label: 'B', labelPosition: 'kanan tengah' });
+
+geo.buatLabelSisi(A, B, 'auto', {
+  skala: 0.1,
+  satuan: ' cm',
+  sisi: 'kanan',
+  bold: true,
+  color: '#dc2626'
+});`
+          },
+          {
+            id: "buatLabelSisiPoligon",
+            nama: "buatLabelSisiPoligon()",
+            ringkasan: "Memberi label pada seluruh sisi poligon sekaligus, otomatis mengarah ke luar poligon.",
+            sintaks: `geo.buatLabelSisiPoligon(titik, daftarTeks, options)`,
+            parameter: [
+              { nama: "titik", tipe: "Array<Array|Object>", ket: "Daftar titik sudut poligon (minimal 3 titik)." },
+              { nama: "daftarTeks", tipe: "Array<string|null> | undefined", ket: "Daftar teks per sisi. Isi null untuk melewati sisi tertentu, atau kosongkan agar semua sisi menampilkan panjang otomatis." },
+              { nama: "options", tipe: "Object", ket: "Sama seperti opsi pada buatLabelSisi()." }
+            ],
+            opsi: [],
+            contohKode: `const geo = new GeoSVG(container, 320, 210);
+const pts = [[60, 165], [260, 165], [160, 45]];
+
+geo.buatPoligon(pts, { fill: '#f0fdf4', stroke: '#16a34a', strokeWidth: 2 });
+geo.buatLabelSisiPoligon(pts, undefined, {
+  skala: 0.1,
+  desimal: 1,
+  satuan: ' cm',
+  color: '#15803d',
+  bold: true
+});`
+          }
+        ]
+      },
+
+      // =====================================================================
+      // KATEGORI 7: SISTEM KOORDINAT & GRAFIK
+      // =====================================================================
+      {
+        id: "koordinat-grafik",
+        judul: "7. Sistem Koordinat & Grafik",
+        deskripsi: "Fungsi untuk membuat kertas berpetak (grid), sumbu koordinat Kartesius X-Y, dan menggambar kurva fungsi matematika y = f(x).",
+        fungsi: [
+          {
+            id: "buatGrid",
+            nama: "buatGrid()",
+            ringkasan: "Menggambar jaring-jaring petak latar (grid) secara efisien menggunakan satu elemen <path> di lapisan paling bawah.",
+            sintaks: `geo.buatGrid(stepX, stepY, options)`,
+            parameter: [
+              { nama: "stepX", tipe: "number", ket: "Jarak antar garis vertikal dalam piksel." },
+              { nama: "stepY", tipe: "number", ket: "Jarak antar garis horizontal (jika dikosongkan, mengikuti nilai stepX)." },
+              { nama: "options", tipe: "Object", ket: "Opsi warna dan ketebalan garis grid." }
+            ],
+            opsi: [
+              { nama: "stroke", tipe: "string", bawaan: "'#ddd'", ket: "Warna garis petak grid." },
+              { nama: "strokeWidth", tipe: "number", bawaan: "1", ket: "Ketebalan garis grid." }
+            ],
+            contohKode: `const geo = new GeoSVG(container, 320, 200);
+geo.buatGrid(20, 20, { stroke: '#cbd5e1', strokeWidth: 1 });
+geo.buatLingkaran([160, 100], 60, { stroke: '#2563eb', strokeWidth: 2 });`
+          },
+          {
+            id: "buatSumbuKoordinat",
+            nama: "buatSumbuKoordinat()",
+            ringkasan: "Menggambar sumbu koordinat X dan Y berpanah lengkap dengan garis strip skala (tick) dan angka-angkanya.",
+            sintaks: `geo.buatSumbuKoordinat(xMin, xMax, yMin, yMax, step, options)`,
+            parameter: [
+              { nama: "xMin, xMax", tipe: "number", ket: "Rentang sumbu mendatar X." },
+              { nama: "yMin, yMax", tipe: "number", ket: "Rentang sumbu tegak Y." },
+              { nama: "step", tipe: "number", ket: "Jarak interval antar angka pada sumbu (bawaan: 10)." },
+              { nama: "options", tipe: "Object", ket: "Pengaturan ukuran tick dan angka." }
+            ],
+            opsi: [
+              { nama: "tickSize", tipe: "number", bawaan: "4", ket: "Panjang garis skala pada sumbu." },
+              { nama: "skipZero", tipe: "boolean", bawaan: "true", ket: "Melewati penulisan angka 0 di titik pusat." }
+            ],
+            contohKode: `const geo = new GeoSVG(container, 320, 220, {
+  viewBox: '-160 -110 320 220',
+  yUp: true
+});
+geo.buatGrid(40);
+geo.buatSumbuKoordinat(-140, 140, -90, 90, 40);`
+          },
+          {
+            id: "buatFungsi",
+            nama: "buatFungsi()",
+            ringkasan: "Menggambar grafik fungsi matematika y = f(x) pada rentang xMin hingga xMax, otomatis menangani diskontinuitas/asimtot.",
+            sintaks: `geo.buatFungsi(f, xMin, xMax, options)`,
+            parameter: [
+              { nama: "f", tipe: "Function", ket: "Fungsi JavaScript x => y, misalnya x => Math.sin(x)." },
+              { nama: "xMin, xMax", tipe: "number", ket: "Batas domain x awal dan akhir." },
+              { nama: "options", tipe: "Object", ket: "Pengaturan skala piksel dan kehalusan langkah." }
+            ],
+            opsi: [
+              { nama: "skala", tipe: "number", bawaan: "1", ket: "Pengali 1 satuan matematika ke piksel layar (untuk X dan Y)." },
+              { nama: "skalaX, skalaY", tipe: "number", bawaan: "options.skala", ket: "Skala terpisah untuk sumbu X atau Y." },
+              { nama: "langkah", tipe: "number", bawaan: "200", ket: "Jumlah segmen pembagi kurva." }
+            ],
+            contohKode: `const geo = new GeoSVG(container, 320, 220, {
+  viewBox: '-160 -110 320 220',
+  yUp: true
+});
+geo.buatGrid(30);
+geo.buatSumbuKoordinat(-150, 150, -95, 95, 30);
+
+// Grafik kuadrat y = 0.25*x^2 - 2 dan gelombang sinus
+geo.buatFungsi(x => 0.25 * x * x - 2, -4, 4, {
+  skala: 30, stroke: '#2563eb', strokeWidth: 2.5
+});
+geo.buatFungsi(x => Math.sin(x), -4.5, 4.5, {
+  skala: 30, stroke: '#dc2626', strokeWidth: 2
+});`
+          }
+        ]
+      },
+
+      // =====================================================================
+      // KATEGORI 8: LAPISAN, GRUP, DOM, & EKSPOR
+      // =====================================================================
+      {
+        id: "dom-ekspor",
+        judul: "8. Lapisan, Grup, DOM, & Ekspor",
+        deskripsi: "Fungsi untuk mengelompokkan elemen, mengatur urutan tumpukan (z-index), mode batch, aksesibilitas judul/deskripsi, serta mengekspor kanvas ke SVG dan PNG.",
+        fungsi: [
+          {
+            id: "buatGrup",
+            nama: "buatGrup()",
+            ringkasan: "Mengelompokkan beberapa elemen SVG ke dalam satu elemen <g> agar bisa diberi gaya atau ditransformasi bersama-sama.",
+            sintaks: `geo.buatGrup(elements, options)`,
+            parameter: [
+              { nama: "elements", tipe: "Array<Element> | Element", ket: "Daftar elemen hasil fungsi buat...() yang ingin digabung." },
+              { nama: "options", tipe: "Object", ket: "Opsi gaya atau transformasi (mis. transform: 'rotate(15)')." }
+            ],
+            opsi: [],
+            contohKode: `const geo = new GeoSVG(container, 320, 200);
+const k = geo.buatPersegi([110, 50], 100);
+const l = geo.buatLingkaran([160, 100], 35);
+
+geo.buatGrup([k, l], {
+  stroke: '#7e22ce',
+  strokeWidth: 2.5,
+  fill: '#f3e8ff',
+  fillOpacity: 0.6
+});`
+          },
+          {
+            id: "hapus",
+            nama: "hapus()",
+            ringkasan: "Menghapus sebuah elemen geometri dari kanvas SVG.",
+            sintaks: `geo.hapus(element)`,
+            parameter: [
+              { nama: "element", tipe: "Element", ket: "Referensi elemen SVG yang dikembalikan oleh fungsi buat...()." }
+            ],
+            opsi: [],
+            contohKode: `const geo = new GeoSVG(container, 320, 200);
+const ling1 = geo.buatLingkaran([110, 100], 55, { fill: '#fca5a5' });
+const ling2 = geo.buatLingkaran([210, 100], 55, { fill: '#86efac' });
+
+// Hapus lingkaran pertama
+geo.hapus(ling1);
+geo.buatTeks(160, 180, 'Lingkaran merah telah dihapus dengan geo.hapus()', { position: 'tengah' });`
+          },
+          {
+            id: "pindahKeAtas",
+            nama: "pindahKeAtas()",
+            ringkasan: "Memindahkan elemen ke urutan paling atas di dalam lapisan/grup induknya agar tidak tertutup elemen lain.",
+            sintaks: `geo.pindahKeAtas(element)`,
+            parameter: [
+              { nama: "element", tipe: "Element", ket: "Elemen yang ingin ditampilkan paling depan." }
+            ],
+            opsi: [],
+            contohKode: `const geo = new GeoSVG(container, 320, 200);
+const biru = geo.buatLingkaran([135, 100], 55, { fill: '#60a5fa', strokeWidth: 2 });
+const kuning = geo.buatPersegi([135, 60], 90, { fill: '#fde047', strokeWidth: 2 });
+
+// Angkat lingkaran biru ke atas persegi kuning
+geo.pindahKeAtas(biru);`
+          },
+          {
+            id: "pindahKeBawah",
+            nama: "pindahKeBawah()",
+            ringkasan: "Memindahkan elemen ke urutan paling bawah di dalam lapisan/grup induknya.",
+            sintaks: `geo.pindahKeBawah(element)`,
+            parameter: [
+              { nama: "element", tipe: "Element", ket: "Elemen yang ingin dipindah ke paling belakang." }
+            ],
+            opsi: [],
+            contohKode: `const geo = new GeoSVG(container, 320, 200);
+const biru = geo.buatLingkaran([135, 100], 55, { fill: '#60a5fa', strokeWidth: 2 });
+const kuning = geo.buatPersegi([135, 60], 90, { fill: '#fde047', strokeWidth: 2 });
+
+// Pindahkan persegi kuning ke belakang lingkaran biru
+geo.pindahKeBawah(kuning);`
+          },
+          {
+            id: "pindahKeLapisan",
+            nama: "pindahKeLapisan()",
+            ringkasan: "Memindahkan elemen ke lapisan kanvas tertentu ('grid', 'shapes', 'labels', atau nama lapisan kustom).",
+            sintaks: `geo.pindahKeLapisan(element, namaLapisan)`,
+            parameter: [
+              { nama: "element", tipe: "Element", ket: "Elemen DOM SVG yang ingin dipindahkan." },
+              { nama: "namaLapisan", tipe: "string", ket: "Nama lapisan tujuan ('grid', 'shapes', 'labels', dll.)." }
+            ],
+            opsi: [],
+            contohKode: `const geo = new GeoSVG(container, 320, 200);
+const teks = geo.buatTeks(160, 100, 'TEKS DI BELAKANG', {
+  position: 'tengah', fontSize: '22px', bold: true, color: '#dc2626'
+});
+const kotak = geo.buatPersegiPanjang([80, 65], 160, 70, {
+  fill: '#bfdbfe', fillOpacity: 0.85, stroke: '#2563eb'
+});
+
+// Secara bawaan teks di lapisan 'labels' (paling atas). Kita pindahkan ke 'grid' (paling bawah):
+geo.pindahKeLapisan(teks, 'grid');`
+          },
+          {
+            id: "batch",
+            nama: "batch(), mulaiBatch(), selesaiBatch()",
+            ringkasan: "Mengumpulkan pembuatan banyak elemen di memori (DocumentFragment) lalu memasukkannya ke DOM sekaligus dalam satu kali operasi agar sangat cepat.",
+            sintaks: `geo.batch(g => { ... })\n// atau manual:\ngeo.mulaiBatch();\n// ... gambar elemen ...\ngeo.selesaiBatch();`,
+            parameter: [
+              { nama: "fn", tipe: "Function", ket: "Fungsi callback yang menerima instance GeoSVG untuk menggambar secara massal." }
+            ],
+            opsi: [],
+            contohKode: `const geo = new GeoSVG(container, 320, 200);
+geo.batch(g => {
+  for (let i = 0; i < 12; i++) {
+    g.buatLingkaran([45 + i * 21, 100], 18, {
+      stroke: i % 2 === 0 ? '#2563eb' : '#16a34a',
+      fill: 'rgba(59, 130, 246, 0.1)'
+    });
+  }
+});`
+          },
+          {
+            id: "setJudul",
+            nama: "setJudul() & setDeskripsi()",
+            ringkasan: "Mengatur atau memperbarui elemen aksesibilitas <title> dan <desc> beserta atribut ARIA pada elemen <svg>.",
+            sintaks: `geo.setJudul(teksJudul)\ngeo.setDeskripsi(teksDeskripsi)`,
+            parameter: [
+              { nama: "teks", tipe: "string | null", ket: "Isi judul/deskripsi gambar. Isi string kosong atau null untuk menghapusnya." }
+            ],
+            opsi: [],
+            contohKode: `const geo = new GeoSVG(container, 320, 190);
+geo.setJudul('Segitiga Sama Sisi');
+geo.setDeskripsi('Gambar segitiga sama sisi dengan panjang sisi 120 piksel.');
+geo.buatPoligonBeraturan([160, 110], 70, 3, { fill: '#dcfce7', stroke: '#16a34a', strokeWidth: 2 });
+
+return 'Atribut role SVG: ' + geo.svg.getAttribute('role') + ' | Title: ' + geo.svg.querySelector('title').textContent;`
+          },
+          {
+            id: "keStringSVG",
+            nama: "keStringSVG() & downloadSVG()",
+            ringkasan: "Mengekspor gambar kanvas menjadi string kode XML SVG murni atau langsung mengunduhnya sebagai file .svg.",
+            sintaks: `const xmlString = geo.keStringSVG();\ngeo.downloadSVG('nama-file.svg');`,
+            parameter: [
+              { nama: "filename", tipe: "string", ket: "Nama file saat diunduh (bawaan: 'geometri.svg')." }
+            ],
+            opsi: [],
+            contohKode: `const geo = new GeoSVG(container, 320, 190);
+geo.buatPoligonBeraturan([160, 95], 65, 5, { fill: '#dbeafe', stroke: '#2563eb', strokeWidth: 2 });
+
+const xml = geo.keStringSVG();
+return 'Panjang karakter XML SVG: ' + xml.length + ' karakter. Panggil geo.downloadSVG() untuk mengunduh.';`
+          },
+          {
+            id: "downloadPNG",
+            nama: "toPNGBlob() & downloadPNG()",
+            ringkasan: "Mengonversi kanvas SVG menjadi gambar raster PNG beresolusi tajam (Promise<Blob>) atau langsung mengunduhnya sebagai file .png.",
+            sintaks: `await geo.downloadPNG('geometri.png', { scale: 3, background: 'white' });\nconst blob = await geo.toPNGBlob({ scale: 2 });`,
+            parameter: [
+              { nama: "filename", tipe: "string", ket: "Nama file PNG (bawaan: 'geometri.png')." },
+              { nama: "skalaAtauOpsi", tipe: "number | Object", ket: "Angka pembesaran resolusi (bawaan: 2) atau objek opsi." }
+            ],
+            opsi: [
+              { nama: "scale", tipe: "number", bawaan: "2", ket: "Faktor pengali resolusi piksel gambar PNG." },
+              { nama: "background", tipe: "string", bawaan: "latar SVG", ket: "Warna latar belakang PNG (mis. '#ffffff' atau 'transparent')." },
+              { nama: "tanpaLatex", tipe: "boolean", bawaan: "false", ket: "Jika true, mengabaikan elemen LaTeX agar ekspor PNG tidak diblokir keamanan canvas browser." }
+            ],
+            contohKode: `const geo = new GeoSVG(container, 320, 190, { background: '#ffffff' });
+geo.buatLingkaran([160, 95], 65, { fill: '#fef08a', stroke: '#ca8a04', strokeWidth: 2 });
+geo.buatTeks(160, 95, 'Siap Ekspor PNG', { position: 'tengah', bold: true });
+
+return 'Gunakan geo.downloadPNG("gambar.png", 3) untuk mengunduh gambar PNG 3x lipat lebih tajam.';`
+          },
+          {
+            id: "clear",
+            nama: "clear() & destroy()",
+            ringkasan: "clear() mengosongkan seluruh gambar tanpa menghapus kanvas SVG, sedangkan destroy() melepas elemen SVG dari halaman dan membebaskan memori.",
+            sintaks: `geo.clear()   // Mengosongkan isi lapisan, siap digambar ulang\ngeo.destroy() // Menghapus kanvas SVG dari container secara permanen`,
+            parameter: [],
+            opsi: [],
+            contohKode: `const geo = new GeoSVG(container, 320, 190);
+geo.buatLingkaran([160, 95], 70, { fill: '#fca5a5' });
+
+// Bersihkan kanvas lalu gambar objek baru
+geo.clear();
+geo.buatGrid(25);
+geo.buatPersegi([105, 40], 110, { fill: '#bbf7d0', stroke: '#16a34a', strokeWidth: 2 });
+geo.buatTeks(160, 95, 'Digambar setelah clear()', { position: 'tengah', bold: true });`
+          }
+        ]
+      }
+    ];
+
+    // =========================================================================
+    // LOGIKA APLIKASI DOKUMENTASI (NAVIGASI, PENCARIAN, & LIVE RUNNER)
+    // =========================================================================
+    const sidebar = document.getElementById('sidebar');
+    const sidebarNav = document.getElementById('sidebarNav');
+    const mainContent = document.getElementById('mainContent');
+    const searchInput = document.getElementById('searchInput');
+    const mobileMenuBtn = document.getElementById('mobileMenuBtn');
+
+    mobileMenuBtn.addEventListener('click', () => {
+      sidebar.classList.toggle('open');
+    });
+
+    // Buat daftar rata semua rute untuk tombol "Sebelumnya / Berikutnya"
+    function dapatkanSemuaRute() {
+      const urut = [];
+      DOCS_DATA.forEach(kat => {
+        (kat.halamanKhusus || []).forEach(h => {
+          urut.push({ route: h.id, label: h.nama });
+        });
+        urut.push({ route: `kategori/${kat.id}`, label: `Kategori: ${kat.judul}` });
+        (kat.fungsi || []).forEach(f => {
+          urut.push({ route: `fungsi/${f.id}`, label: f.nama });
+        });
+      });
+      return urut;
+    }
+
+    function renderSidebar(filter = '') {
+      const q = filter.trim().toLowerCase();
+      let html = '';
+
+      DOCS_DATA.forEach(kat => {
+        const halamanKhususCocok = (kat.halamanKhusus || []).filter(h =>
+          h.nama.toLowerCase().includes(q)
+        );
+        const fungsiCocok = (kat.fungsi || []).filter(f =>
+          f.nama.toLowerCase().includes(q) || f.ringkasan.toLowerCase().includes(q)
+        );
+
+        const kategoriCocok = kat.judul.toLowerCase().includes(q);
+        if (q && !kategoriCocok && halamanKhususCocok.length === 0 && fungsiCocok.length === 0) {
+          return;
+        }
+
+        const daftarFungsiTampil = kategoriCocok ? (kat.fungsi || []) : fungsiCocok;
+        const daftarKhususTampil = kategoriCocok ? (kat.halamanKhusus || []) : halamanKhususCocok;
+
+        html += `
+          <div class="nav-group">
+            <a href="#kategori/${kat.id}" class="nav-cat-link" data-route="kategori/${kat.id}">
+              <span>${kat.judul}</span>
+              <span class="cat-count">${(kat.fungsi || []).length}</span>
+            </a>
+            <ul class="nav-items">
+        `;
+
+        daftarKhususTampil.forEach(h => {
+          html += `<li class="nav-item"><a href="#${h.id}" class="text-link" data-route="${h.id}">📖 ${h.nama}</a></li>`;
+        });
+
+        daftarFungsiTampil.forEach(f => {
+          html += `<li class="nav-item"><a href="#fungsi/${f.id}" data-route="fungsi/${f.id}">${f.nama}</a></li>`;
+        });
+
+        html += `</ul></div>`;
+      });
+
+      sidebarNav.innerHTML = html || `<p style="padding:0.5rem;font-size:0.85rem;">Tidak ada fungsi yang cocok.</p>`;
+      tandaiMenuAktif();
+    }
+
+    function tandaiMenuAktif() {
+      const hash = location.hash.slice(1) || 'pengenalan';
+      document.querySelectorAll('.sidebar a[data-route]').forEach(a => {
+        a.classList.toggle('active', a.getAttribute('data-route') === hash);
+      });
+    }
+
+    function buatNavigasiBawah(currentRoute) {
+      const semua = dapatkanSemuaRute();
+      const idx = semua.findIndex(r => r.route === currentRoute);
+      if (idx === -1) return '';
+
+      const prev = idx > 0 ? semua[idx - 1] : null;
+      const next = idx < semua.length - 1 ? semua[idx + 1] : null;
+
+      return `
+        <div class="page-nav">
+          ${prev ? `<a href="#${prev.route}"><span>← Sebelumnya</span><strong>${prev.label}</strong></a>` : `<div></div>`}
+          ${next ? `<a href="#${next.route}" style="text-align:right;"><span>Berikutnya →</span><strong>${next.label}</strong></a>` : `<div></div>`}
+        </div>
+      `;
+    }
+
+    function renderHalaman() {
+      const hash = location.hash.slice(1) || 'pengenalan';
+      sidebar.classList.remove('open');
+      tandaiMenuAktif();
+
+      // 1. Cek Halaman Khusus
+      for (const kat of DOCS_DATA) {
+        for (const h of (kat.halamanKhusus || [])) {
+          if (h.id === hash) {
+            mainContent.innerHTML = h.kontenHTML + buatNavigasiBawah(hash);
+            window.scrollTo(0, 0);
+            return;
+          }
+        }
+      }
+
+      // 2. Cek Halaman Kategori (#kategori/...)
+      if (hash.startsWith('kategori/')) {
+        const katId = hash.split('/')[1];
+        const kat = DOCS_DATA.find(k => k.id === katId);
+        if (kat) {
+          const specialCards = (kat.halamanKhusus || []).map(h => `
+            <a href="#${h.id}" class="fn-card">
+              <div>
+                <h3 style="font-family:inherit;">📖 ${h.nama}</h3>
+                <p>Panduan pengantar dan cara instalasi dasar GeoSVG.js.</p>
+              </div>
+            </a>
+          `).join('');
+
+          const fnCards = (kat.fungsi || []).map(f => `
+            <a href="#fungsi/${f.id}" class="fn-card">
+              <div>
+                <h3>${f.nama}</h3>
+                <p>${f.ringkasan}</p>
+              </div>
+            </a>
+          `).join('');
+
+          mainContent.innerHTML = `
+            <a href="#pengenalan" class="breadcrumb">📚 Dokumentasi GeoSVG.js</a>
+            <h1>${kat.judul}</h1>
+            <p class="lead">${kat.deskripsi}</p>
+
+            <h2>Daftar Halaman & Fungsi (${(kat.fungsi || []).length} Fungsi)</h2>
+            <div class="card-grid">
+              ${specialCards}
+              ${fnCards}
+            </div>
+            ${buatNavigasiBawah(hash)}
+          `;
+          window.scrollTo(0, 0);
+          return;
+        }
+      }
+
+      // 3. Cek Halaman Detail Fungsi (#fungsi/...)
+      if (hash.startsWith('fungsi/')) {
+        const fnId = hash.split('/')[1];
+        for (const kat of DOCS_DATA) {
+          const fn = (kat.fungsi || []).find(f => f.id === fnId);
+          if (fn) {
+            tampilkanHalamanFungsi(kat, fn, hash);
+            window.scrollTo(0, 0);
+            return;
+          }
+        }
+      }
+
+      location.hash = '#pengenalan';
+    }
+
+    function tampilkanHalamanFungsi(kat, fn, hash) {
+      const barisParam = (fn.parameter && fn.parameter.length > 0)
+        ? fn.parameter.map(p => `
+            <tr>
+              <td><code>${p.nama}</code></td>
+              <td><code>${p.tipe}</code></td>
+              <td>${p.ket}</td>
+            </tr>
+          `).join('')
+        : `<tr><td colspan="3" style="color:var(--text-muted);">Fungsi ini tidak memerlukan parameter wajib.</td></tr>`;
+
+      const bagianOpsi = (fn.opsi && fn.opsi.length > 0)
+        ? `
+          <h2>Opsi Konfigurasi (<code>options</code>)</h2>
+          <div class="table-wrap">
+            <table>
+              <thead>
+                <tr><th>Nama Opsi</th><th>Tipe</th><th>Nilai Bawaan</th><th>Keterangan</th></tr>
+              </thead>
+              <tbody>
+                ${fn.opsi.map(o => `
+                  <tr>
+                    <td><code>${o.nama}</code></td>
+                    <td><code>${o.tipe}</code></td>
+                    <td><code>${o.bawaan}</code></td>
+                    <td>${o.ket}</td>
+                  </tr>
+                `).join('')}
+              </tbody>
+            </table>
+          </div>
+        `
+        : '';
+
+      mainContent.innerHTML = `
+        <a href="#kategori/${kat.id}" class="breadcrumb">← Kategori: ${kat.judul}</a>
+        <h1><code>${fn.nama}</code></h1>
+        <p class="lead">${fn.ringkasan}</p>
+
+        <h2>Format Kode (Sintaks)</h2>
+        <pre><code>${fn.sintaks}</code></pre>
+
+        <h2>Parameter</h2>
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr><th>Parameter</th><th>Tipe</th><th>Keterangan</th></tr>
+            </thead>
+            <tbody>${barisParam}</tbody>
+          </table>
+        </div>
+
+        ${bagianOpsi}
+
+        <h2>Contoh & Hasil Contoh Interaktif</h2>
+        <p>Anda dapat mengubah kode di sebelah kiri dan menekan <strong>Jalankan Kode</strong> untuk melihat perubahan hasilnya secara langsung:</p>
+        <div class="demo-container">
+          <div class="code-editor-panel">
+            <div class="panel-toolbar">
+              <span>KODE CONTOH JAVASCRIPT</span>
+              <div class="toolbar-actions">
+                <button class="btn-small" id="btnCopyCode">Salin Kode</button>
+                <button class="btn-small" id="btnResetCode">Reset</button>
+                <button class="btn-small primary" id="btnRunCode">▶ Jalankan Kode</button>
+              </div>
+            </div>
+            <textarea id="liveCodeEditor" class="code-textarea" spellcheck="false"></textarea>
+          </div>
+
+          <div class="preview-panel">
+            <div class="preview-header">
+              <span>HASIL CONTOH (LIVE SVG)</span>
+              <button class="btn-small" id="btnDownloadDemoSVG" style="background:#e2e8f0;color:#0f172a;">Unduh SVG</button>
+            </div>
+            <div class="preview-canvas">
+              <div id="livePreviewContainer"></div>
+              <div id="liveConsoleOutput" class="console-output" style="display:none;"></div>
+            </div>
+          </div>
+        </div>
+
+        ${buatNavigasiBawah(hash)}
+      `;
+
+      const editor = document.getElementById('liveCodeEditor');
+      const previewContainer = document.getElementById('livePreviewContainer');
+      const consoleBox = document.getElementById('liveConsoleOutput');
+      editor.value = fn.contohKode;
+
+      function jalankanKode() {
+        previewContainer.innerHTML = '';
+        consoleBox.style.display = 'none';
+        try {
+          const runner = new Function('container', editor.value);
+          const hasilReturn = runner(previewContainer);
+          if (hasilReturn !== undefined) {
+            consoleBox.style.display = 'block';
+            consoleBox.textContent = '💡 Output: ' + hasilReturn;
+          }
+        } catch (err) {
+          consoleBox.style.display = 'block';
+          consoleBox.style.color = '#dc2626';
+          consoleBox.textContent = '⚠️ Error: ' + err.message;
+        }
+      }
+
+      document.getElementById('btnRunCode').addEventListener('click', jalankanKode);
+      document.getElementById('btnResetCode').addEventListener('click', () => {
+        editor.value = fn.contohKode;
+        jalankanKode();
+      });
+      document.getElementById('btnCopyCode').addEventListener('click', (e) => {
+        navigator.clipboard.writeText(editor.value);
+        e.target.textContent = '✓ Tersalin!';
+        setTimeout(() => { e.target.textContent = 'Salin Kode'; }, 1500);
+      });
+      document.getElementById('btnDownloadDemoSVG').addEventListener('click', () => {
+        const svgEl = previewContainer.querySelector('svg');
+        if (!svgEl) return;
+        const xml = '<?xml version="1.0" standalone="no"?>\r\n' + new XMLSerializer().serializeToString(svgEl);
+        const blob = new Blob([xml], { type: 'image/svg+xml;charset=utf-8' });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = `contoh-${fn.id}.svg`;
+        a.click();
+        setTimeout(() => URL.revokeObjectURL(url), 1000);
+      });
+
+      jalankanKode();
+    }
+
+    searchInput.addEventListener('input', e => renderSidebar(e.target.value));
+    window.addEventListener('hashchange', renderHalaman);
+
+    // Inisialisasi saat halaman pertama kali dibuka
+    renderSidebar();
+    renderHalaman();
+  </script>
+</body>
+
+</html>
