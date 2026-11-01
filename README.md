@@ -2,13 +2,13 @@
 
 **Pustaka Geometri SVG Berbahasa Indonesia yang Ringan, Cepat, dan Tanpa Dependensi Wajib.**
 
-![Versi](https://img.shields.io/badge/versi-v0.0.3--beta-ea580c)
+![Versi](https://img.shields.io/badge/versi-v0.0.4--beta-ea580c)
 ![Status](https://img.shields.io/badge/status-Beta%20Publik-f59e0b)
 ![Ukuran](https://img.shields.io/badge/dependensi-0%20(murni%20JS)-16a34a)
 ![Format](https://img.shields.io/badge/modul-UMD%20%7C%20ESM%20%7C%20CommonJS-7e22ce)
 ![Lisensi](https://img.shields.io/badge/lisensi-MIT-2563eb)
 
-> ⚠️ **Catatan Rilis Beta (`v0.0.3`):**  
+> ⚠️ **Catatan Rilis Beta (`v0.0.4`):**  
 > **GeoSVG.js** saat ini masih berada dalam tahap **Beta** dan terus dikembangkan secara aktif. Kami sangat mengharapkan **perbaikan, saran fitur, maupun kritik membangun** dari Anda! Jika Anda menemukan *bug* atau punya ide penyempurnaan API, silakan buka laporan di halaman [**GitHub Issues**](https://github.com/KulikMath/GeoSVG/issues).
 
 **GeoSVG.js** adalah pustaka JavaScript berbasis DOM/SVG yang dirancang khusus untuk mempermudah pembuatan ilustrasi geometri matematika, bangun datar, sudut, arsiran, konstruksi garis (garis tinggi, garis sumbu, garis bagi, lingkaran luar/dalam), hingga pemetaan grafik fungsi $y = f(x)$ menggunakan API berbahasa Indonesia yang bersih dan intuitif.
